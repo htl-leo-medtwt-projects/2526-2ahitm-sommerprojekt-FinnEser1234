@@ -1,0 +1,83 @@
+# PROJEKTANTRAG  
+## Der letzte Fall – Flucht aus dem Büro des Detektivs
+
+**Browser-Escape-Room-Spiel | Sommersemester Projekt**
+
+**Finn Eser – IT230193**
+
+---
+
+# Grundidee
+
+## Art des Spiels
+Das Spiel ist ein **Escape Room / Detektiv-Puzzle-Spiel**, das vollständig im Browser gespielt wird.  
+Der Spieler befindet sich im Büro eines Detektivs und muss durch das Lösen von Rätseln und das Finden von Hinweisen den Raum verlassen und einen mysteriösen Fall aufklären.
+
+## Spielidee und Ziel
+Der Spieler übernimmt die Rolle eines Detektivs in den **1980er Jahren**, inspiriert vom Stil klassischer Detektivgeschichten.  
+
+Ziel ist es:
+- Hinweise zu untersuchen  
+- logische Rätsel zu lösen  
+- den finalen Code zu finden, um den Raum zu verlassen
+
+## Geschichte
+Das Spiel spielt im **Jahr 1984**.
+
+Ein bekannter Detektiv ist verschwunden. Der Spieler befindet sich in dessen Büro, um den letzten Fall zu untersuchen. Das Büro enthält Notizen, Akten und verschlossene Schubladen.  
+
+Der Spieler muss alle Hinweise analysieren, um das Geheimnis zu lösen.
+
+---
+
+# Mechaniken
+
+## Gewinnen und Verlieren
+Der Spieler gewinnt, wenn:
+- alle Rätsel gelöst wurden
+- der finale Code korrekt eingegeben wurde
+
+Der Fortschritt hängt vollständig von den gelösten Rätseln ab.
+
+## Spielmechanik
+
+- Anklicken von Objekten  
+- Finden von Hinweisen  
+- Eingeben von Codes  
+- Interaktion mit Objekten  
+
+## Progression
+Der Spieler entdeckt Hinweise, löst Rätsel und schaltet neue Inhalte frei.  
+Der Fortschritt wird gespeichert.
+
+## USP (Unique Selling Points)
+
+- Authentische **1980er-Detektiv-Atmosphäre**
+- **Story-basiertes Gameplay**
+- **Interaktive Rätsel**
+- **Immersive User Experience**
+
+---
+
+# Zielgruppe
+
+**Altersgruppe:** 14–30 Jahre  
+
+**Spielertyp:**
+- Gelegenheitsspieler  
+- Puzzle-Fans  
+
+---
+
+# Farbschema
+
+| Farbe | Hex | RGB |
+|------|------|------|
+| Dunkelgrau | `#37353E` | rgb(55, 53, 62) |
+| Dunkelblau-Grau | `#44444E` | rgb(68, 68, 78) |
+| Braun-Grau | `#715A5A` | rgb(113, 90, 90) |
+| Hellgrau | `#D3DAD9` | rgb(211, 218, 217) |
+
+---
+
+**Finn Eser – IT230193**
