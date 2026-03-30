@@ -10,10 +10,18 @@ body {
     height: 100vh;
     margin: 0;
 
-    background: url('../IMG/Wissenschaftsraum.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-color: #C78639;
+}
+
+#mainTitle {
+    text-align: center;
+    color: black;
+    margin: 0;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    letter-spacing: 0.2em;
 }
 
 #mainBox {
@@ -29,9 +37,33 @@ body {
     color: white;
     position: relative;
 
-    background-color: rgba(0, 0, 0, 0.636);
-
     border-bottom: #C78639 solid 5px;
+}
+
+#scrollArrow {
+    position: absolute;
+    bottom: 20px;
+    left: 10%;
+    transform: translateX(-50%);
+}
+
+#scrollArrow img {
+    width: 200px;
+    height: auto;
+    animation: scrollDown 2s infinite ease-in-out;
+    margin: 0;
+}
+
+@keyframes scrollDown {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(15px);
+    }
+    100% {
+        transform: translateY(0);
+    }
 }
 
 #imgElipse {
@@ -40,7 +72,6 @@ body {
     overflow: hidden;
 
     border-radius: 50%;
-    filter: invert();
 }
 
 #imgElipse img {
@@ -55,32 +86,136 @@ body {
     width: auto;
     position: absolute;
     right: 50%;
-    transform: translateX(300px);
+    transform: translateX(500px);
     margin-top: 25%;
 
     z-index: 100;
 }
 
 #btnGrid div {
-    width: 100%;
-    background-color: #C78639;
+    width: 300px;
+    background-color: black;
 
-    padding: 10%;
+    padding: 2%;
     margin: 0;
 
     text-align: center;
 
     border-radius: 5px;
     transition: all 0.2s linear;
+    color: #C78639;
+    border: 2px black solid;
 }
 
 #btnGrid div:hover {
-    color: #C78639;
-    background-color: white;
+    color: black;
+    background-color: #C78639;
     cursor: pointer;
 }
 
 #storyLine {
     width: auto;
-    height: 200vh;
+    min-height: 200vh;
+    background-color: #d0b08c;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 80px 20px;
+    overflow: hidden;
+}
+
+.timeline {    
+    width: 50%;
+    position: relative;
+    padding-bottom: 40px;
+}
+
+.timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 14px;
+    height: calc(100% - 140px);
+    transform: translateX(-50%);
+    background-color: #000;
+}
+
+.timeline-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    margin: 26px 0;
+    min-height: 90px;
+    position: relative;
+    z-index: 1;
+}
+
+.timeline-text,
+.timeline-date {
+    color: #000;
+    line-height: 1.2;
+}
+
+.timeline-text {
+    font-size: 2.2rem;
+}
+
+.timeline-date {
+    font-size: 1.6rem;
+}
+
+.timeline-row.left .timeline-text,
+.timeline-row.left .timeline-date {
+    text-align: right;
+    padding-right: 50px;
+}
+
+.timeline-row.right .timeline-text,
+.timeline-row.right .timeline-date {
+    text-align: left;
+    padding-left: 50px;
+}
+
+.timeline-row.left .timeline-text {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.timeline-row.left .timeline-date {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.timeline-row.right .timeline-date {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.timeline-row.right .timeline-text {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.timeline-arrow {
+    width: 0;
+    height: 0;
+    margin: -6px auto 26px;
+    border-left: 22px solid transparent;
+    border-right: 22px solid transparent;
+    border-top: 38px solid #000;
+    color: transparent;
+}
+
+.timeline-cta {
+    display: block;
+    margin: 0 auto;
+    border: none;
+    background: #000;
+    color: #c78639;
+    text-transform: uppercase;
+    font-family: Sherlock;
+    font-size: 1.5rem;
+    padding: 10px 36px;
+    cursor: pointer;
 }
