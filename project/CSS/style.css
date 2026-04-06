@@ -154,6 +154,8 @@ body {
     z-index: 1;
 }
 
+/* Diese Abschnitte hab ich mittels KI gelöst, da ich sehr lange an einer perfekten Ausrichtung saß und es nicht gepackt hab */
+
 .timeline-text,
 .timeline-date {
     color: #000;
@@ -223,7 +225,7 @@ body {
 }
 
 #settingsPage {
-    height: 100vh;
+    height: auto;
     overflow-y: auto;
     background-color: #c78639;
     padding: 80px 0 0;
@@ -367,37 +369,8 @@ body {
     color: #f2c481;
 }
 
-@media (max-width: 900px) {
-    .settings-card {
-        width: calc(100% - 30px);
-        padding: 28px 22px;
-        border-radius: 26px;
-        margin-bottom: 36px;
-    }
-
-    .settings-grid {
-        grid-template-columns: 1fr;
-        row-gap: 24px;
-    }
-
-    .language-box,
-    .slider-wide {
-        grid-column: auto;
-        grid-row: auto;
-    }
-
-    .saves-card h2 {
-        font-size: 2.2rem;
-    }
-
-    .save-row {
-        font-size: 1.5rem;
-        padding: 5px 6px;
-    }
-
-    #settingsFooter {
-        grid-template-columns: 1fr;
-        gap: 24px;
-        padding: 24px;
-    }
+#backBtn {
+    width: 5%;
+    position: absolute;
+    left: 95%;
 }
