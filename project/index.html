@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,9 +14,9 @@
             <img src="./IMG/sherlock.png" alt="Sherlock Face">
         </div>
         <div id="btnGrid">
-            <div>Start</div>
-            <div>Rules</div>
-            <div>Settings</div>
+            <a href="#mainBox">Start</a>
+            <a href="#storyLine">Rules</a>
+            <a href="./pages/settings.html">Settings</a>
         </div>
         <div id="scrollArrow">
             <img src="./IMG/arrow.png" alt="Scroll Arrow">        
@@ -25,50 +25,73 @@
 
     <div id="storyLine">
         <div class="timeline">
+            <!--
+                STORY-NOTIZ
+
+                Kompletter Ablauf:
+                1) Vorgeschichte:
+                   - Der Forscher Dr. Elias Thorn baut eine Zeitmaschine und stellt sie in London vor.
+                   - Bei einer Nachtvorfuehrung verschwindet er ploetzlich.
+                   - Ganz London glaubt zuerst an einen echten Zeitsprung.
+
+                2) Fall / Ermittlungsphase im Spiel:
+                   - Sherlock und Watson untersuchen Hinweise.
+                   - Ein Verbrecher (Der Silberfuchs) spielt mit dieser Zeitmaschinen-Theorie.
+                   - Spaeter merkt Sherlock: Es war keine echte Zeitreise.
+                   - Hinter dem Verschwinden steckt ein Entfuehrer, der den Bauplan will.
+
+                3) Wende:
+                   - Die Ermittlungen wechseln von "Zeitmaschinen-Mysterium" zu "Entfuehrungsfall".
+
+                4) Enden:
+                   - Gutes Ende: Richtige Hinweise -> Entfuehrer wird gefasst, Forscher gerettet.
+                   - Schlechtes Ende: Falsche Faehrte -> Spieler glaubt weiter an Zeitmaschine,
+                     Entfuehrer entkommt.
+            -->
             <div class="timeline-line"></div>
 
             <div class="timeline-row left">
-                <div class="timeline-text">Der erste Brief trifft in der Baker Street ein.</div>
+                <div class="timeline-text">Der Forscher Dr. Elias Thorn stellt seine Zeitmaschine in London vor.</div>
                 <div class="timeline-date">22. August, 1896</div>
             </div>
 
             <div class="timeline-row right">
                 <div class="timeline-date">22. Oktober, 1896</div>
-                <div class="timeline-text">Eine verschwundene Zeugin hinterlasst nur eine Uhr.</div>
+                <div class="timeline-text">Bei einer Nachtvorfuhrung verschwindet Thorn plotzlich, nur sein Notizbuch bleibt zuruck.</div>
             </div>
 
             <div class="timeline-row left">
-                <div class="timeline-text">Watson entdeckt im Nebel eine Spur aus Asche.</div>
+                <div class="timeline-text">In den Tagen davor berichten Nachbarn von seltsamen Geräuschen aus seinem Labor.</div>
                 <div class="timeline-date">22. November, 1896</div>
             </div>
 
             <div class="timeline-row right">
-                <div class="timeline-date">8. J&auml;nner, 1897</div>
-                <div class="timeline-text">Holmes knackt den Code in einem Opernprogramm.</div>
+                <div class="timeline-date">8. Jänner, 1897</div>
+                <div class="timeline-text">Ganz London glaubt: Thorn wurde durch seine eigene Maschine in die Zeit gerissen.</div>
             </div>
 
             <div class="timeline-row left">
-                <div class="timeline-text">In Whitechapel wird ein geheimer Keller gefunden.</div>
-                <div class="timeline-date">29. J&auml;nner, 1897</div>
+                <div class="timeline-text">Scotland Yard steht vor einem Ratsel und bittet Sherlock Holmes um Hilfe.</div>
+                <div class="timeline-date">29. Jänner, 1897</div>
             </div>
 
             <div class="timeline-row right">
                 <div class="timeline-date">6. Februar, 1897</div>
-                <div class="timeline-text">Der Verdacht fallt auf den Mann mit dem Silberstock.</div>
+                <div class="timeline-text">Jetzt beginnt dein Fall: Finde heraus, was wirklich passiert ist.</div>
             </div>
 
             <div class="timeline-row left">
-                <div class="timeline-text">Ein letztes Treffen im Bahnhof bringt die Wahrheit ans Licht.</div>
+                <div class="timeline-text">Die Spurensuche liegt in deiner Hand.</div>
                 <div class="timeline-date">13. Februar, 1897</div>
             </div>
 
             <div class="timeline-row right">
                 <div class="timeline-date">20. Februar, 1897</div>
-                <div class="timeline-text">Der Fall endet und London atmet wieder auf.</div>
+                <div class="timeline-text">Jede Entscheidung kann den Verlauf der Geschichte verandern.</div>
             </div>
 
             <div class="timeline-arrow">▼</div>
-            <button class="timeline-cta">Begin your journey</button>
+            <button class="timeline-cta" id="startCaseBtn">Begin your journey</button>
         </div>
     </div>
 </body>
