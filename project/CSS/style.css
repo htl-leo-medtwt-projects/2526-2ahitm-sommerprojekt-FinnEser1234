@@ -374,3 +374,14 @@ body {
     position: absolute;
     left: 95%;
 }
+
+
+/**********************************************/
+/*******************RULES**********************/
+/**********************************************/
+
+#rulesMainbox {
+    background: url('../IMG/rulesBackground.png');
+    width: 100vw;
+    height: auto;
+}
