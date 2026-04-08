@@ -3,9 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game</title>
+    <title>The last Case</title>
+
+    <link rel="stylesheet" href="../CSS/style.css">
+    <script src="../JS/script.js" defer></script>
 </head>
-<body>
-    
+<body id="gameBody">
+    <a href="../index.html" class="gameBack" aria-label="Zur Startseite">
+        <img src="../IMG/x.png" alt="Back Button" id="gameBackBtn">
+    </a>
+
+    <main class="gameShell">
+        <h1>The Last Case</h1>
+        <p id="detectiveGreeting">Please verify yourself!</p>
+        <button type="button" id="caseStartBtn" class="caseStartButton" disabled>Fall starten</button>
+    </main>
+
+    <section id="gameSetupModal" class="gameModal" aria-modal="true" role="dialog">
+        <form id="gameSetupForm" class="gameModalCard">
+            <h2>Case signing</h2>
+            <p>Please enter your detectiv name</p>
+
+            <label for="detectiveName">Name</label>
+            <input id="detectiveName" name="detectiveName" type="text" maxlength="24" placeholder="z. B. Finn" required>
+
+            <p id="setupError" class="setupErrorText" aria-live="polite"></p>
+
+            <button type="submit" class="caseStartButton">Sign and start</button>
+        </form>
+    </section>
 </body>
 </html>
