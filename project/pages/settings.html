@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" href="../CSS/style.css">
+</head>
+<body>
+
+    <a href="../index.html"><img src="../IMG/x.png" alt="Back Button" id="backBtn"></a>
+    <!--Hab die Sounds von meinem Prototypen kopiert und davor hab ich mir da was zusammengebastelt mit Codepen-->
+    <section id="settingsPage">
+        <div class="settingsCard">
+            <div class="settingsGrid">
+                <div class="sliderGroup">
+                    <label for="sfxRange">SFX</label>
+                    <div class="rangeRow">
+                        <span>-</span>
+                        <input id="sfxRange" type="range" min="0" max="100" value="72">
+                        <span>+</span>
+                    </div>
+                </div>
+
+                <div class="sliderGroup">
+                    <label for="musicRange">Musik</label>
+                    <div class="rangeRow">
+                        <span>-</span>
+                        <input id="musicRange" type="range" min="0" max="100" value="84">
+                        <span>+</span>
+                    </div>
+                </div>
+
+                <div class="sliderGroup">
+                    <label for="speechRange">Sprache</label>
+                    <div class="rangeRow">
+                        <span>-</span>
+                        <input id="speechRange" type="range" min="0" max="100" value="23">
+                        <span>+</span>
+                    </div>
+                </div>
+
+                <div class="languageBox" aria-label="Sprachauswahl">
+                    <button class="languageButton active" type="button">Deutsch</button>
+                    <button class="languageButton" type="button">Englisch</button>
+                    <button class="languageButton" type="button">Italienisch</button>
+                    <button class="languageButton" type="button">Russisch</button>
+                    <button class="languageButton" type="button">Türkisch</button>
+                </div>
+
+                <div class="sliderGroup sliderWide">
+                    <label for="allRange">Alles</label>
+                    <div class="rangeRow">
+                        <span>-</span>
+                        <input id="allRange" type="range" min="0" max="100" value="35">
+                        <span>+</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settingsCard savesCard">
+            <h2>Speicherst&auml;nde</h2>
+            <div class="savesTable" aria-label="Speicherstaende">
+                <button class="saveRow active" type="button">
+                    <span>Spielstand1</span>
+                    <span>Name</span>
+                    <span>99%</span>
+                </button>
+                <button class="saveRow" type="button">
+                    <span>Spielstand1</span>
+                    <span>Name</span>
+                    <span>99%</span>
+                </button>
+                <button class="saveRow" type="button">
+                    <span>Spielstand1</span>
+                    <span>Name</span>
+                    <span>99%</span>
+                </button>
+                <button class="saveRow" type="button">
+                    <span>Spielstand1</span>
+                    <span>Name</span>
+                    <span>99%</span>
+                </button>
+                <button class="saveRow" type="button">
+                    <span>Spielstand1</span>
+                    <span>Name</span>
+                    <span>99%</span>
+                </button>
+                <button class="saveRow" type="button">
+                    <span>Spielstand1</span>
+                    <span>Name</span>
+                    <span>99%</span>
+                </button>
+                <button class="saveRow" type="button">
+                    <span>Spielstand1</span>
+                    <span>Name</span>
+                    <span>99%</span>
+                </button>
+            </div>
+        </div>
+
+        <footer id="settingsFooter">
+            <div class="footerCol">
+                <h3>Socials</h3>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+                <a href="https://snapchat.com" target="_blank" rel="noopener noreferrer">Snapchat</a>
+                <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer">TikTok</a>
+            </div>
+            <div class="footerCol">
+                <h3>Contact</h3>
+                <a href="https://maps.google.com/?q=Aigensstrasse+12+4060+Leonding" target="_blank" rel="noopener noreferrer">Address: Aigensstrasse 12, 4060 Leonding</a>
+                <a href="mailto:f.esor@students.htl-leonding.ac.at">Email: f.esor@students.htl-leonding.ac.at</a>
+        </footer>
+    </section>
+</body>
+</html>
