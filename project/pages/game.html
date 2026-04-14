@@ -16,7 +16,7 @@
     <main class="gameShell">
         <h1>The Last Case</h1>
         <p id="detectiveGreeting">Please verify yourself!</p>
-        <button type="button" id="caseStartBtn" class="caseStartButton" disabled>Fall starten</button>
+        <button type="button" id="caseStartBtn" class="caseStartButton" disabled>Start case</button>
     </main>
 
     <section id="gameSetupModal" class="gameModal" aria-modal="true" role="dialog">
@@ -32,5 +32,55 @@
             <button type="submit" class="caseStartButton">Sign and start</button>
         </form>
     </section>
+
+    <section id="levelOne" class="levelSection levelHidden" aria-label="Erstes Level im Wissenschaftsraum">
+        <div class="scienceRoom">
+            <button type="button" id="pinboardFocusBtn" class="pinboardFocusBtn" aria-label="Pinnwand untersuchen">
+                Pinnwand untersuchen
+            </button>
+
+            <button type="button" id="deskLetterBtn" class="deskLetterBtn" aria-label="Brief auf dem Schreibtisch ansehen">
+                Brief
+            </button>
+        </div>
+    </section>
+
+    <section id="pinboardOverlay" class="pinboardOverlay pinboardOverlayHidden" aria-modal="true" role="dialog" aria-label="Pinnwand Hinweise">
+        <button type="button" id="pinboardCloseBtn" class="pinboardCloseBtn" aria-label="Pinnwand schließen">
+            Zurueck
+        </button>
+
+        <div class="pinboardSurface"></div>
+    </section>
+
+    <article id="letterNoteCard" class="letterNoteCard letterNoteHidden" aria-live="polite">
+        <h2>Wichtige Info</h2>
+        <p id="letterNoteText"></p>
+        <button type="button" id="closeLetterNote" class="caseStartButton">Schliessen</button>
+    </article>
+
+    <button type="button" id="inventoryToggle" class="inventoryToggle" aria-label="Inventar oeffnen">
+        <img src="../IMG/Lederrucksack.png" alt="Inventar Tasche">
+    </button>
+
+    <aside id="inventoryPanel" class="inventoryPanel inventoryHidden" aria-label="Inventar">
+        <h2>Inventar</h2>
+
+        <div id="pinboardItem" class="inventoryItem inventoryItemLocked">
+            <span class="inventoryIcon inventoryIconMagnifier" aria-hidden="true"></span>
+            <div>
+                <p class="inventoryItemTitle">Pinnwand Karte</p>
+                <p class="inventoryItemMeta">Noch nicht gefunden</p>
+            </div>
+        </div>
+
+        <div id="letterItem" class="inventoryItem inventoryItemLocked">
+            <span class="inventoryIcon inventoryIconLetter" aria-hidden="true"></span>
+            <div>
+                <p class="inventoryItemTitle">Brief</p>
+                <p class="inventoryItemMeta">Noch nicht gefunden</p>
+            </div>
+        </div>
+    </aside>
 </body>
 </html>
