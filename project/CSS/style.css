@@ -666,27 +666,29 @@ body.modalOpen {
     background: transparent;
     color: transparent;
     font-size: 0;
-    cursor: pointer;
+    cursor: default;
     outline: none;
 }
 
 .deskLetterBtn {
     position: absolute;
-    bottom: 20%;
-    left: 46%;
+    bottom: 16%;
+    left: 26%;
     width: 90px;
     aspect-ratio: 4 / 3;
     border: none;
+    border-radius: 0;
     color: transparent;
     font-size: 0;
-    cursor: pointer;
-    background: url('../IMG/letter.png') center center / contain no-repeat;
-    filter: drop-shadow(0 4px 9px rgba(0, 0, 0, 0.4));
-    transition: transform 0.2s ease;
+    cursor: default;
+    background: transparent;
+    opacity: 1;
+    filter: none;
+    outline: none;
 }
 
 .deskLetterBtn:hover {
-    transform: scale(1.08) rotate(-3deg);
+    background: transparent;
 }
 
 .pinboardOverlay {
@@ -892,8 +894,8 @@ body.modalOpen {
 
     .deskLetterBtn {
         width: 74px;
-        left: 43%;
-        bottom: 22%;
+        left: 22%;
+        bottom: 18%;
     }
 
     .letterNoteCard p {
