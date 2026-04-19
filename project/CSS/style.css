@@ -222,53 +222,11 @@ body.zoomFade {
     grid-row: 1;
 }
 
-.timelineArrow {
-    width: 0;
-    height: 0;
-    margin: -6px auto 26px;
-    border-left: 22px solid transparent;
-    border-right: 22px solid transparent;
-    border-top: 38px solid #000;
-    color: transparent;
-}
-
-.timelineCta {
-    display: block;
-    margin: 0 auto;
-    border: none;
-    background: #000;
-    color: #c78639;
-    font-family: Sherlock;
-    font-size: 1.5rem;
-    padding: 10px 36px;
-    cursor: pointer;
-}
-
 #settingsPage {
     height: auto;
     overflow-y: auto;
     background-color: #c78639;
     padding: 80px 0 0;
-}
-
-#startCaseBtn {
-    width: 300px;
-    background-color: black;
-
-    padding: 2%;
-
-    text-align: center;
-
-    border-radius: 5px;
-    transition: all 0.2s linear;
-    color: #d0b08c;
-    border: 2px black solid;
-    font-size: 2rem;
-}
-
-#startCaseBtn:hover {
-    background-color: #d0b08c;
-    color: #000;
 }
 
 .settingsCard {
@@ -481,26 +439,6 @@ body.rulesCompactPage {
     line-height: 1.35;
 }
 
-.rulesStartCompact {
-    margin-top: 18px;
-    min-width: 200px;
-    display: inline-block;
-    text-align: center;
-    text-decoration: none;
-    background-color: #c78639;
-    color: #000;
-    border: 2px solid #c78639;
-    border-radius: 6px;
-    padding: 8px 18px;
-    font-size: 1.35rem;
-    transition: all 0.2s linear;
-}
-
-.rulesStartCompact:hover {
-    background-color: #000;
-    color: #c78639;
-}
-
 /**********************************************/
 /*******************GAMES**********************/
 /**********************************************/
@@ -687,10 +625,6 @@ body.modalOpen {
     outline: none;
 }
 
-.deskLetterBtn:hover {
-    background: transparent;
-}
-
 .pinboardOverlay {
     position: fixed;
     inset: 0;
@@ -873,37 +807,4 @@ body.modalOpen {
     bottom: 7px;
     transform: rotate(38deg);
     border-radius: 2px;
-}
-
-@media (max-width: 900px) {
-    .gameShell {
-        padding: 24px;
-        width: calc(100% - 22px);
-    }
-
-    .scienceRoom {
-        height: 100%;
-    }
-
-    .pinboardFocusBtn {
-        width: 34%;
-        min-height: 38%;
-        right: 8%;
-        top: 13%;
-    }
-
-    .deskLetterBtn {
-        width: 74px;
-        left: 22%;
-        bottom: 18%;
-    }
-
-    .letterNoteCard p {
-        font-size: 1.05rem;
-    }
-
-    .inventoryToggle {
-        width: 76px;
-        height: 76px;
-    }
 }
