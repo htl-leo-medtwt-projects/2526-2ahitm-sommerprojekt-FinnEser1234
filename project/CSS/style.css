@@ -155,8 +155,6 @@ body {
     z-index: 1;
 }
 
-/* Diese Abschnitte hab ich mittels KI gelöst, da ich sehr lange an einer perfekten Ausrichtung saß und es nicht gepackt hab */
-
 .timelineText,
 .timelineDate {
     color: #000;
@@ -197,8 +195,6 @@ body {
     grid-column: 1;
     grid-row: 1;
 }
-
-/* Den Zoomübergang hab ich auch mit KI gelöst */
 
 @keyframes zoomAndFade {
     from {
@@ -593,36 +589,106 @@ body.modalOpen {
     background: url('../IMG/Wissenschaftsraum.png') center center / cover no-repeat;
 }
 
+.roomControlBar {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 6;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.roomSwitchBtn {
+    background-color: rgba(0, 0, 0, 0.84);
+    color: #f1d2a1;
+    border: 2px solid #c78639;
+    border-radius: 8px;
+    font-family: Sherlock;
+    font-size: 1.2rem;
+    padding: 8px 14px;
+    cursor: pointer;
+}
+
+.roomSwitchBtn:hover {
+    filter: brightness(1.08);
+}
+
+.roomGridCard {
+    width: min(760px, 95vw);
+}
+
+.roomsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.roomGridItem {
+    border: 2px solid #73532f;
+    border-radius: 10px;
+    padding: 10px;
+    background: #14110c;
+    color: #e7cda5;
+    min-height: 92px;
+}
+
+.roomGridLocked {
+    opacity: 0.55;
+}
+
+.roomGridEnterable {
+    cursor: pointer;
+}
+
+.roomGridEnterable:hover {
+    filter: brightness(1.08);
+}
+
+.roomGridFound {
+    border-color: #3f9d63;
+    background: #0f1f16;
+}
+
+.roomGridCurrent {
+    box-shadow: 0 0 0 2px #d4a466 inset;
+}
+
+.roomGridTitle {
+    margin: 0 0 6px;
+    font-size: 1.15rem;
+}
+
+.roomGridState {
+    margin: 0;
+    font-size: 1rem;
+    color: #c6ad86;
+}
+
 .pinboardFocusBtn {
     position: absolute;
-    top: 17%;
-    right: 14%;
-    width: 22%;
-    min-height: 34%;
     border: none;
     border-radius: 0;
     background: transparent;
     color: transparent;
     font-size: 0;
     cursor: default;
+    opacity: 0;
     outline: none;
+    z-index: 4;
 }
 
 .deskLetterBtn {
     position: absolute;
-    bottom: 16%;
-    left: 26%;
-    width: 90px;
-    aspect-ratio: 4 / 3;
     border: none;
     border-radius: 0;
+    background: transparent;
     color: transparent;
     font-size: 0;
     cursor: default;
-    background: transparent;
-    opacity: 1;
-    filter: none;
+    opacity: 0;
     outline: none;
+    z-index: 4;
 }
 
 .pinboardOverlay {
@@ -662,6 +728,27 @@ body.modalOpen {
     overflow: hidden;
     background: url('../IMG/Pinboard.png') center center / cover no-repeat;
     box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55);
+}
+
+.suspectsCard {
+    display: grid;
+    gap: 10px;
+}
+
+.suspectsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.suspectPickBtn {
+    min-height: 82px;
+}
+
+.suspectSelected {
+    background-color: #1b5f36;
+    border-color: #2d9a5b;
+    color: #f0f8f2;
 }
 
 .letterNoteCard {
@@ -737,74 +824,22 @@ body.modalOpen {
     font-size: 2rem;
 }
 
-.inventoryItem {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #6f5738;
-    margin-bottom: 10px;
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.inventoryItemLocked {
-    opacity: 0.5;
-}
-
-.inventoryItemFound {
-    opacity: 1;
-    border-color: #e3bc7f;
-    background: rgba(208, 165, 102, 0.14);
-}
-
-.inventoryItemTitle {
+.inventoryEmptyText {
     margin: 0;
-    font-size: 1.25rem;
-    color: #f4dbb8;
-}
-
-.inventoryItemMeta {
-    margin: 0;
-    font-size: 1rem;
+    font-size: 1.05rem;
     color: #d1ba93;
 }
 
-.inventoryIcon {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
+.inventoryFoundList {
+    display: grid;
+    gap: 8px;
 }
 
-.inventoryIconLetter {
-    background: url('../IMG/letter.png') center center / contain no-repeat;
-}
-
-.inventoryIconMagnifier {
-    position: relative;
-}
-
-.inventoryIconMagnifier::before {
-    content: "";
-    position: absolute;
-    top: 4px;
-    left: 5px;
-    width: 20px;
-    height: 20px;
-    border: 4px solid #e4bf83;
-    border-radius: 50%;
-    box-sizing: border-box;
-}
-
-.inventoryIconMagnifier::after {
-    content: "";
-    position: absolute;
-    width: 12px;
-    height: 4px;
-    background: #e4bf83;
-    right: 3px;
-    bottom: 7px;
-    transform: rotate(38deg);
-    border-radius: 2px;
+.inventoryFoundItem {
+    border: 1px solid #6f5738;
+    border-radius: 8px;
+    padding: 8px;
+    color: #f4dbb8;
+    background: rgba(255, 255, 255, 0.05);
+    font-size: 1rem;
 }

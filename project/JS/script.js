@@ -1,18 +1,9 @@
-let settingsNavBtn = document.getElementById("settingsNavBtn");
-let settingsPage = document.getElementById("settingsPage");
-
-if (settingsNavBtn && settingsPage) {
-	settingsNavBtn.addEventListener("click", function () {
-		settingsPage.scrollIntoView({ behavior: "smooth", block: "start" });
-	});
-}
-
 let startBtn = document.querySelector('#btnGrid a[href*="game.html"]');
 if (startBtn) {
 	startBtn.addEventListener("click", function (e) {
 		e.preventDefault();
 		document.body.classList.add("zoomFade");
-		
+
 		setTimeout(function () {
 			window.location.href = startBtn.href;
 		}, 900);
@@ -27,147 +18,398 @@ let detectiveGreeting = document.getElementById("detectiveGreeting");
 let setupError = document.getElementById("setupError");
 let gameShell = document.querySelector(".gameShell");
 let levelOne = document.getElementById("levelOne");
+
+let roomScene = document.getElementById("roomScene");
+let roomSwitchBtn = document.getElementById("roomSwitchBtn");
+let showSuspectsBtn = document.getElementById("showSuspectsBtn");
 let pinboardFocusBtn = document.getElementById("pinboardFocusBtn");
 let deskLetterBtn = document.getElementById("deskLetterBtn");
+
 let pinboardOverlay = document.getElementById("pinboardOverlay");
 let pinboardCloseBtn = document.getElementById("pinboardCloseBtn");
 let letterNoteCard = document.getElementById("letterNoteCard");
 let letterNoteText = document.getElementById("letterNoteText");
 let closeLetterNote = document.getElementById("closeLetterNote");
+
+let roomsModal = document.getElementById("roomsModal");
+let roomsGrid = document.getElementById("roomsGrid");
+let closeRoomsBtn = document.getElementById("closeRoomsBtn");
+
+let suspectsModal = document.getElementById("suspectsModal");
+let closeSuspectsBtn = document.getElementById("closeSuspectsBtn");
+let suspectPickButtons = document.querySelectorAll(".suspectPickBtn");
+
 let inventoryToggle = document.getElementById("inventoryToggle");
 let inventoryPanel = document.getElementById("inventoryPanel");
-let pinboardItem = document.getElementById("pinboardItem");
-let letterItem = document.getElementById("letterItem");
+let inventoryEmptyText = document.getElementById("inventoryEmptyText");
+let inventoryFoundList = document.getElementById("inventoryFoundList");
 
-let inventoryStorageKey = "tlc_level1_inventory";
-let levelOneInventory = {
-	pinboard: false,
-	letter: false
-};
+let rooms = [];
+let roomsDataPath = "../data/rooms.json";
 
-function loadInventoryState() {
-	let rawState = localStorage.getItem(inventoryStorageKey);
-	if (!rawState) {
-		return;
+let currentRoomIndex = 0;
+let foundItems = [];
+let selectedSuspect = null;
+
+async function loadRoomsData() {
+	if (rooms.length > 0) {
+		return true;
 	}
 
 	try {
-		let parsedState = JSON.parse(rawState);
-		if (typeof parsedState.pinboard === "boolean") {
-			levelOneInventory.pinboard = parsedState.pinboard;
+		let response = await fetch(roomsDataPath);
+		if (!response.ok) {
+			throw new Error("Raumdaten konnten nicht geladen werden.");
 		}
-		if (typeof parsedState.letter === "boolean") {
-			levelOneInventory.letter = parsedState.letter;
+
+		let parsedRooms = await response.json();
+		if (!Array.isArray(parsedRooms) || parsedRooms.length === 0) {
+			throw new Error("Raumdaten sind leer oder ungueltig.");
 		}
+
+		rooms = parsedRooms;
+		return true;
 	} catch (error) {
-		levelOneInventory = {
-			pinboard: false,
-			letter: false
-		};
-	}
-}
-
-function saveInventoryState() {
-	localStorage.setItem(inventoryStorageKey, JSON.stringify(levelOneInventory));
-}
-
-function updateInventoryUi() {
-	if (pinboardItem) {
-		let pinboardMeta = pinboardItem.querySelector(".inventoryItemMeta");
-		pinboardItem.classList.toggle("inventoryItemFound", levelOneInventory.pinboard);
-		pinboardItem.classList.toggle("inventoryItemLocked", !levelOneInventory.pinboard);
-		if (pinboardMeta) {
-			pinboardMeta.textContent = levelOneInventory.pinboard ? "Gefunden" : "Noch nicht gefunden";
+		rooms = [];
+		if (roomSwitchBtn) {
+			roomSwitchBtn.textContent = "Raumstatus: keine Daten";
 		}
-	}
-
-	if (letterItem) {
-		let letterMeta = letterItem.querySelector(".inventoryItemMeta");
-		letterItem.classList.toggle("inventoryItemFound", levelOneInventory.letter);
-		letterItem.classList.toggle("inventoryItemLocked", !levelOneInventory.letter);
-		if (letterMeta) {
-			letterMeta.textContent = levelOneInventory.letter ? "Gefunden" : "Noch nicht gefunden";
+		if (setupError) {
+			setupError.textContent = "Raumdaten konnten nicht geladen werden.";
 		}
+		return false;
 	}
 }
 
-loadInventoryState();
-updateInventoryUi();
+function roomHasBothFinds(roomIndex) {
+	let hasLetter = foundItems.some(function (item) { return item.key === "letter_" + roomIndex; });
+	let hasPinboard = foundItems.some(function (item) { return item.key === "pinboard_" + roomIndex; });
+	return hasLetter && hasPinboard;
+}
+
+function setHotspot(button, position) {
+	if (!button || !position) {
+		return;
+	}
+
+	button.style.top = position.top;
+	button.style.left = position.left;
+	button.style.width = position.width;
+	button.style.height = position.height;
+}
+
+function updateBodyModalState() {
+	let hasOpenModal = false;
+
+	if (gameSetupModal && !gameSetupModal.classList.contains("gameModalHidden")) {
+		hasOpenModal = true;
+	}
+	if (pinboardOverlay && !pinboardOverlay.classList.contains("pinboardOverlayHidden")) {
+		hasOpenModal = true;
+	}
+	if (roomsModal && !roomsModal.classList.contains("gameModalHidden")) {
+		hasOpenModal = true;
+	}
+	if (suspectsModal && !suspectsModal.classList.contains("gameModalHidden")) {
+		hasOpenModal = true;
+	}
+
+	document.body.classList.toggle("modalOpen", hasOpenModal);
+}
+
+function applyRoom() {
+	if (!roomScene || !roomSwitchBtn || rooms.length === 0) {
+		return;
+	}
+
+	let room = rooms[currentRoomIndex];
+	roomScene.style.backgroundImage = room.background;
+	roomSwitchBtn.textContent = "Raumstatus: " + room.name;
+
+	setHotspot(pinboardFocusBtn, room.pinboard);
+	setHotspot(deskLetterBtn, room.letter);
+}
+
+function showLetterText(text) {
+	if (!letterNoteCard || !letterNoteText) {
+		return;
+	}
+
+	letterNoteText.textContent = text;
+	letterNoteCard.classList.remove("letterNoteHidden");
+}
+
+function closeLetterText() {
+	if (letterNoteCard) {
+		letterNoteCard.classList.add("letterNoteHidden");
+	}
+}
+
+function updateSuspectSelectionUi() {
+	if (suspectPickButtons.length === 0) {
+		return;
+	}
+
+	suspectPickButtons.forEach(function (button) {
+		let suspectName = button.getAttribute("data-suspect");
+		button.classList.toggle("suspectSelected", suspectName === selectedSuspect);
+	});
+}
+
+function addFoundItem(itemKey, title, sourceRoomIndex) {
+	if (!rooms[sourceRoomIndex]) {
+		return;
+	}
+
+	if (foundItems.some(function (item) { return item.key === itemKey; })) {
+		return;
+	}
+
+	foundItems.push({
+		key: itemKey,
+		title: title,
+		roomName: rooms[sourceRoomIndex].name
+	});
+
+	rooms[sourceRoomIndex].found = true;
+	if (roomHasBothFinds(sourceRoomIndex) && sourceRoomIndex < rooms.length - 1) {
+		rooms[sourceRoomIndex + 1].unlocked = true;
+	}
+	renderInventory();
+	renderRoomsGrid();
+}
+
+function renderInventory() {
+	if (!inventoryFoundList || !inventoryEmptyText) {
+		return;
+	}
+
+	inventoryFoundList.innerHTML = "";
+	inventoryEmptyText.style.display = foundItems.length === 0 ? "block" : "none";
+
+	foundItems.forEach(function (item) {
+		let row = document.createElement("div");
+		row.className = "inventoryFoundItem";
+		row.textContent = item.title + " - " + item.roomName;
+		inventoryFoundList.appendChild(row);
+	});
+}
+
+function renderRoomsGrid() {
+	if (!roomsGrid) {
+		return;
+	}
+
+	roomsGrid.innerHTML = "";
+	if (rooms.length === 0) {
+		let info = document.createElement("p");
+		info.className = "roomGridState";
+		info.textContent = "Keine Raumdaten vorhanden.";
+		roomsGrid.appendChild(info);
+		return;
+	}
+
+	rooms.forEach(function (room, index) {
+		let cell = document.createElement("div");
+		cell.className = "roomGridItem";
+
+		let stateText = "Gesperrt";
+		if (room.unlocked) {
+			stateText = room.found ? "Gefunden" : "Untersuchen";
+		}
+
+		if (!room.unlocked) {
+			cell.classList.add("roomGridLocked");
+		} else {
+			cell.classList.add("roomGridEnterable");
+			cell.setAttribute("role", "button");
+			cell.setAttribute("tabindex", "0");
+			cell.addEventListener("click", function () {
+				currentRoomIndex = index;
+				applyRoom();
+				closeRoomsModal();
+			});
+			cell.addEventListener("keydown", function (event) {
+				if (event.key === "Enter" || event.key === " ") {
+					event.preventDefault();
+					currentRoomIndex = index;
+					applyRoom();
+					closeRoomsModal();
+				}
+			});
+		}
+		if (room.found) {
+			cell.classList.add("roomGridFound");
+		}
+		if (index === currentRoomIndex) {
+			cell.classList.add("roomGridCurrent");
+		}
+
+		let title = document.createElement("p");
+		title.className = "roomGridTitle";
+		title.textContent = room.name;
+
+		let state = document.createElement("p");
+		state.className = "roomGridState";
+		state.textContent = stateText;
+
+		cell.appendChild(title);
+		cell.appendChild(state);
+		roomsGrid.appendChild(cell);
+	});
+}
+
+function openRoomsModal() {
+	if (!roomsModal) {
+		return;
+	}
+
+	renderRoomsGrid();
+	roomsModal.classList.remove("gameModalHidden");
+	updateBodyModalState();
+}
+
+function closeRoomsModal() {
+	if (!roomsModal) {
+		return;
+	}
+
+	roomsModal.classList.add("gameModalHidden");
+	updateBodyModalState();
+}
+
+function openSuspectsModal() {
+	if (!suspectsModal) {
+		return;
+	}
+
+	updateSuspectSelectionUi();
+	suspectsModal.classList.remove("gameModalHidden");
+	updateBodyModalState();
+}
+
+function closeSuspectsModal() {
+	if (!suspectsModal) {
+		return;
+	}
+
+	suspectsModal.classList.add("gameModalHidden");
+	updateBodyModalState();
+}
 
 if (gameSetupModal && gameSetupForm && detectiveNameInput && caseStartBtn && detectiveGreeting && setupError) {
-	document.body.classList.add("modalOpen");
 	gameSetupModal.classList.remove("gameModalHidden");
+	updateBodyModalState();
 
 	gameSetupForm.addEventListener("submit", function (event) {
 		event.preventDefault();
 
 		let playerName = detectiveNameInput.value.trim();
 		if (!playerName) {
-			setupError.textContent = "Enter your name";
+			setupError.textContent = "Gib deinen Namen ein";
+			return;
 		}
 
-		// LOCAL-STORAGE kommt hier dann
-
 		setupError.textContent = "";
-		detectiveGreeting.textContent = "Welcome, " + playerName + ". your Case is waiting.";
+		detectiveGreeting.textContent = "Willkommen, " + playerName + ". Dein Fall wartet.";
 		caseStartBtn.disabled = false;
 		gameSetupModal.classList.add("gameModalHidden");
-		document.body.classList.remove("modalOpen");
+		updateBodyModalState();
 	});
 
-	caseStartBtn.addEventListener("click", function () {
+	caseStartBtn.addEventListener("click", async function () {
 		if (caseStartBtn.disabled) {
 			return;
 		}
 
-		caseStartBtn.textContent = "Level 1 started";
+		caseStartBtn.textContent = "Abschnitt 1 gestartet";
 		caseStartBtn.disabled = true;
 
 		if (gameShell && levelOne) {
+			let roomsLoaded = await loadRoomsData();
+			if (!roomsLoaded) {
+				return;
+			}
+
 			gameShell.classList.add("levelHidden");
 			levelOne.classList.remove("levelHidden");
+			currentRoomIndex = 0;
+			applyRoom();
+			renderInventory();
+			renderRoomsGrid();
 		}
 	});
 }
 
-if (pinboardFocusBtn && pinboardOverlay && pinboardCloseBtn) {
-	pinboardFocusBtn.addEventListener("click", function () {
-		pinboardOverlay.classList.remove("pinboardOverlayHidden");
-		document.body.classList.add("modalOpen");
-
-		if (!levelOneInventory.pinboard) {
-			levelOneInventory.pinboard = true;
-			saveInventoryState();
-			updateInventoryUi();
-		}
+if (roomSwitchBtn) {
+	roomSwitchBtn.addEventListener("click", function () {
+		openRoomsModal();
 	});
+}
 
+if (showSuspectsBtn) {
+	showSuspectsBtn.addEventListener("click", function () {
+		openSuspectsModal();
+	});
+}
+
+if (closeRoomsBtn) {
+	closeRoomsBtn.addEventListener("click", function () {
+		closeRoomsModal();
+	});
+}
+
+if (pinboardFocusBtn) {
+	pinboardFocusBtn.addEventListener("click", function () {
+		if (!pinboardOverlay) {
+			return;
+		}
+
+		pinboardOverlay.classList.remove("pinboardOverlayHidden");
+		addFoundItem("pinboard_" + currentRoomIndex, "Pinnwand untersucht", currentRoomIndex);
+		updateBodyModalState();
+	});
+}
+
+if (pinboardCloseBtn && pinboardOverlay) {
 	pinboardCloseBtn.addEventListener("click", function () {
 		pinboardOverlay.classList.add("pinboardOverlayHidden");
-		document.body.classList.remove("modalOpen");
-
-		if (letterNoteCard) {
-			letterNoteCard.classList.add("letterNoteHidden");
-		}
+		updateBodyModalState();
 	});
 }
 
-if (deskLetterBtn && letterNoteCard && letterNoteText) {
+if (deskLetterBtn) {
 	deskLetterBtn.addEventListener("click", function () {
-		letterNoteText.textContent = "Dr. Thorn wurde nicht durch Zeitreise verschluckt. Der Silberfuchs nutzt den Mythos nur als Tarnung fuer eine Entfuehrung.";
-		letterNoteCard.classList.remove("letterNoteHidden");
-
-		if (!levelOneInventory.letter) {
-			levelOneInventory.letter = true;
-			saveInventoryState();
-			updateInventoryUi();
+		if (!rooms[currentRoomIndex]) {
+			return;
 		}
+
+		selectedSuspect = "Mara Voss";
+		updateSuspectSelectionUi();
+		showLetterText("Mara Voss wurde in Thorns Labor gesehen. Sie muss etwas mit dem Verschwinden zu tun haben.");
+		addFoundItem("letter_" + currentRoomIndex, "Brief (falsche Fährte: Mara Voss)", currentRoomIndex);
 	});
 }
 
-if (closeLetterNote && letterNoteCard) {
+if (closeLetterNote) {
 	closeLetterNote.addEventListener("click", function () {
-		letterNoteCard.classList.add("letterNoteHidden");
+		closeLetterText();
+	});
+}
+
+if (closeSuspectsBtn) {
+	closeSuspectsBtn.addEventListener("click", function () {
+		closeSuspectsModal();
+	});
+}
+
+if (suspectPickButtons.length > 0) {
+	suspectPickButtons.forEach(function (button) {
+		button.addEventListener("click", function () {
+			selectedSuspect = button.getAttribute("data-suspect");
+			updateSuspectSelectionUi();
+			closeSuspectsModal();
+		});
 	});
 }
 
@@ -176,4 +418,3 @@ if (inventoryToggle && inventoryPanel) {
 		inventoryPanel.classList.toggle("inventoryHidden");
 	});
 }
-

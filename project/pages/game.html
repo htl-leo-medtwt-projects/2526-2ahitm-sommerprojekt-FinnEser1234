@@ -1,40 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The last Case</title>
+    <title>Der letzte Fall</title>
 
    <link rel="stylesheet" href="../CSS/style.css">
     <script src="../JS/script.js" defer></script>
 </head>
 <body id="gameBody">
     <a href="../index.html" class="gameBack" aria-label="Zur Startseite">
-        <img src="../IMG/x.png" alt="Back Button" id="gameBackBtn">
+        <img src="../IMG/x.png" alt="Zurück-Button" id="gameBackBtn">
     </a>
 
     <main class="gameShell">
-        <h1>The Last Case</h1>
-        <p id="detectiveGreeting">Please verify yourself!</p>
-        <button type="button" id="caseStartBtn" class="caseStartButton" disabled>Start case</button>
+        <h1>Der letzte Fall</h1>
+        <p id="detectiveGreeting">Bitte verifiziere dich!</p>
+        <button type="button" id="caseStartBtn" class="caseStartButton" disabled>Fall starten</button>
     </main>
 
     <section id="gameSetupModal" class="gameModal" aria-modal="true" role="dialog">
         <form id="gameSetupForm" class="gameModalCard">
-            <h2>Case signing</h2>
-            <p>Please enter your detectiv name</p>
+            <h2>Fall registrieren</h2>
+            <p>Bitte gib deinen Detektivnamen ein</p>
 
             <label for="detectiveName">Name</label>
             <input id="detectiveName" name="detectiveName" type="text" maxlength="24" placeholder="z. B. Finn" required>
 
             <p id="setupError" class="setupErrorText" aria-live="polite"></p>
 
-            <button type="submit" class="caseStartButton">Sign and start</button>
+            <button type="submit" class="caseStartButton">Eintragen und starten</button>
         </form>
     </section>
 
-    <section id="levelOne" class="levelSection levelHidden" aria-label="Erstes Level im Wissenschaftsraum">
-        <div class="scienceRoom">
+    <section id="levelOne" class="levelSection levelHidden" aria-label="Erstes Level im Ermittlungsraum">
+        <div id="roomScene" class="scienceRoom">
+            <div class="roomControlBar">
+                <button type="button" id="roomSwitchBtn" class="roomSwitchBtn" aria-label="Raum wechseln">
+                    Raum: Wissenschaftsraum
+                </button>
+                <button type="button" id="showSuspectsBtn" class="caseStartButton" aria-label="Verdächtige anzeigen">
+                    Verdächtige
+                </button>
+            </div>
+
             <button type="button" id="pinboardFocusBtn" class="pinboardFocusBtn" aria-label="Pinnwand untersuchen">
                 Pinnwand untersuchen
             </button>
@@ -45,42 +54,50 @@
         </div>
     </section>
 
-    <section id="pinboardOverlay" class="pinboardOverlay pinboardOverlayHidden" aria-modal="true" role="dialog" aria-label="Pinnwand Hinweise">
+    <section id="pinboardOverlay" class="pinboardOverlay pinboardOverlayHidden" aria-modal="true" role="dialog" aria-label="Pinnwand">
         <button type="button" id="pinboardCloseBtn" class="pinboardCloseBtn" aria-label="Pinnwand schließen">
-            Zurueck
+            Zurück
         </button>
 
         <div class="pinboardSurface"></div>
     </section>
 
     <article id="letterNoteCard" class="letterNoteCard letterNoteHidden" aria-live="polite">
-        <h2>Wichtige Info</h2>
+        <h2>Brief</h2>
         <p id="letterNoteText"></p>
-        <button type="button" id="closeLetterNote" class="caseStartButton">Schliessen</button>
+        <button type="button" id="closeLetterNote" class="caseStartButton">Schließen</button>
     </article>
 
-    <button type="button" id="inventoryToggle" class="inventoryToggle" aria-label="Inventar oeffnen">
+    <section id="roomsModal" class="gameModal gameModalHidden" aria-modal="true" role="dialog" aria-label="Raumstatus">
+        <div class="gameModalCard roomGridCard">
+            <h2>Raumstatus</h2>
+            <p>Raumwechsel kommt später. Hier siehst du aktuell nur den Status.</p>
+            <div id="roomsGrid" class="roomsGrid"></div>
+            <button type="button" id="closeRoomsBtn" class="caseStartButton">Schließen</button>
+        </div>
+    </section>
+
+    <section id="suspectsModal" class="gameModal gameModalHidden" aria-modal="true" role="dialog" aria-label="Verdächtige auswählen">
+        <div class="gameModalCard suspectsCard">
+            <h2>Verdächtige</h2>
+            <p>Wen willst du aktuell verdächtigen?</p>
+            <div class="suspectsGrid">
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Mara Voss">Mara Voss</button>
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Inspektor Hale">Inspektor Hale</button>
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Der Silberfuchs">Der Silberfuchs</button>
+            </div>
+            <button type="button" id="closeSuspectsBtn" class="caseStartButton">Zurück</button>
+        </div>
+    </section>
+
+    <button type="button" id="inventoryToggle" class="inventoryToggle" aria-label="Inventar öffnen">
         <img src="../IMG/Lederrucksack.png" alt="Inventar Tasche">
     </button>
 
     <aside id="inventoryPanel" class="inventoryPanel inventoryHidden" aria-label="Inventar">
         <h2>Inventar</h2>
-
-        <div id="pinboardItem" class="inventoryItem inventoryItemLocked">
-            <span class="inventoryIcon inventoryIconMagnifier" aria-hidden="true"></span>
-            <div>
-                <p class="inventoryItemTitle">Pinnwand Karte</p>
-                <p class="inventoryItemMeta">Noch nicht gefunden</p>
-            </div>
-        </div>
-
-        <div id="letterItem" class="inventoryItem inventoryItemLocked">
-            <span class="inventoryIcon inventoryIconLetter" aria-hidden="true"></span>
-            <div>
-                <p class="inventoryItemTitle">Brief</p>
-                <p class="inventoryItemMeta">Noch nicht gefunden</p>
-            </div>
-        </div>
+        <p id="inventoryEmptyText" class="inventoryEmptyText">Noch nichts gefunden.</p>
+        <div id="inventoryFoundList" class="inventoryFoundList"></div>
     </aside>
 </body>
 </html>

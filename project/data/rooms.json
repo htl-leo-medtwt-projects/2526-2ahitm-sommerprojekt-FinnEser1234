@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Wissenschaftsraum",
+    "background": "url('../IMG/Wissenschaftsraum.png')",
+    "unlocked": true,
+    "found": false,
+    "pinboard": { "top": "17%", "left": "64%", "width": "22%", "height": "34%" },
+    "letter": { "top": "72%", "left": "26%", "width": "90px", "height": "68px" }
+  },
+  {
+    "name": "Apartment",
+    "background": "url('../IMG/Apartment.png')",
+    "unlocked": false,
+    "found": false,
+    "pinboard": { "top": "20%", "left": "10%", "width": "22%", "height": "30%" },
+    "letter": { "top": "69%", "left": "58%", "width": "94px", "height": "72px" }
+  },
+  {
+    "name": "Beweiswand",
+    "background": "url('../IMG/Pinboard.png')",
+    "unlocked": false,
+    "found": false,
+    "pinboard": { "top": "16%", "left": "16%", "width": "68%", "height": "64%" },
+    "letter": { "top": "64%", "left": "61%", "width": "96px", "height": "72px" }
+  }
+]
