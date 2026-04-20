@@ -34,6 +34,26 @@
         </form>
     </section>
 
+    <section id="storyIntroModal" class="gameModal gameModalHidden" aria-modal="true" role="dialog" aria-label="Fall-Einfuehrung">
+        <div class="gameModalCard storyIntroCard">
+            <h2>Was bisher geschah</h2>
+            <p>
+                Kurz vor deiner Ankunft ist im Labor etwas passiert, das nicht in den offiziellen Berichten steht.
+                Mehrere Aussagen widersprechen sich, und jemand versucht, Spuren gezielt zu lenken.
+            </p>
+            <p>
+                Dein erstes Ziel: Finde die ersten zwei belastbaren Hinweise, um den naechsten Raum freizuschalten.
+            </p>
+            <p class="storyHintTitle">Worauf du im Raum klicken kannst:</p>
+            <ul class="storyHintList">
+                <li>Suche nach Dingen, die sichtbar platziert wurden, als sollten sie sofort auffallen.</li>
+                <li>Achte auf Schriftstuecke, Namen und Formulierungen, die zu eindeutig wirken.</li>
+                <li>Untersuche technische Geraete genau, wenn sie eine Reihenfolge oder ein Muster andeuten.</li>
+            </ul>
+            <button type="button" id="startFirstRoomBtn" class="caseStartButton">In den ersten Raum starten</button>
+        </div>
+    </section>
+
     <section id="levelOne" class="levelSection levelHidden" aria-label="Erstes Level im Ermittlungsraum">
         <div id="roomScene" class="scienceRoom">
             <div class="roomControlBar">
@@ -56,6 +76,10 @@
             <button type="button" id="encryptionMachineBtn" class="encryptionMachineBtn" aria-label="Verschlüsselungsmaschine untersuchen">
                 Verschlüsselungsmaschine
             </button>
+
+            <button type="button" id="windowInspectBtn" class="windowInspectBtn" aria-label="Fenster ansehen">
+                Fenster ansehen
+            </button>
         </div>
     </section>
 
@@ -65,6 +89,13 @@
         </button>
 
         <div class="pinboardSurface"></div>
+    </section>
+
+    <section id="windowOverlay" class="windowOverlay windowOverlayHidden" aria-modal="true" role="dialog" aria-label="Fensteransicht">
+        <button type="button" id="windowCloseBtn" class="pinboardCloseBtn" aria-label="Fensteransicht schließen">
+            Zurück
+        </button>
+        <img src="../IMG/FensterWissenschaftsraum.png" alt="Blick aus dem Fenster im Wissenschaftsraum" class="windowOverlayImage">
     </section>
 
     <article id="letterNoteCard" class="letterNoteCard letterNoteHidden" aria-live="polite">
