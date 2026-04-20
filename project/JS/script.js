@@ -31,6 +31,16 @@ let letterNoteCard = document.getElementById("letterNoteCard");
 let letterNoteText = document.getElementById("letterNoteText");
 let closeLetterNote = document.getElementById("closeLetterNote");
 
+let hintCard = document.getElementById("hintCard");
+let hintText = document.getElementById("hintText");
+let closeHint = document.getElementById("closeHint");
+let cipherGrid = document.getElementById("cipherGrid");
+let cipherProgress = document.getElementById("cipherProgress");
+let cipherFeedback = document.getElementById("cipherFeedback");
+let resetCipher = document.getElementById("resetCipher");
+
+let encryptionMachineBtn = document.getElementById("encryptionMachineBtn");
+
 let roomsModal = document.getElementById("roomsModal");
 let roomsGrid = document.getElementById("roomsGrid");
 let closeRoomsBtn = document.getElementById("closeRoomsBtn");
@@ -50,6 +60,11 @@ let roomsDataPath = "../data/rooms.json";
 let currentRoomIndex = 0;
 let foundItems = [];
 let selectedSuspect = null;
+
+let cipherTarget = "BLACKWOOD";
+let cipherLetters = ["B", "A", "R", "L", "M", "Q", "A", "C", "K", "T", "W", "Y", "O", "O", "D", "N", "E", "S"];
+let cipherCurrentIndex = 0;
+let cipherSolved = false;
 
 async function loadRoomsData() {
 	if (rooms.length > 0) {
@@ -128,6 +143,7 @@ function applyRoom() {
 
 	setHotspot(pinboardFocusBtn, room.pinboard);
 	setHotspot(deskLetterBtn, room.letter);
+	setHotspot(encryptionMachineBtn, room.encryption);
 }
 
 function showLetterText(text) {
@@ -143,6 +159,114 @@ function closeLetterText() {
 	if (letterNoteCard) {
 		letterNoteCard.classList.add("letterNoteHidden");
 	}
+}
+
+function showHint(text) {
+	if (!hintCard || !hintText) {
+		return;
+	}
+
+	if (text) {
+		hintText.textContent = text;
+	}
+	hintCard.classList.remove("letterNoteHidden");
+}
+
+function closeHintText() {
+	if (hintCard) {
+		hintCard.classList.add("letterNoteHidden");
+	}
+}
+
+function getCipherMaskedProgress() {
+	let solvedPart = cipherTarget.slice(0, cipherCurrentIndex).split("");
+	let hiddenPart = new Array(cipherTarget.length - cipherCurrentIndex).fill("_");
+	return solvedPart.concat(hiddenPart).join(" ");
+}
+
+function updateCipherProgressText() {
+	if (!cipherProgress) {
+		return;
+	}
+
+	cipherProgress.textContent = "Fortschritt: " + getCipherMaskedProgress();
+}
+
+function resetCipherPuzzle(message) {
+	cipherCurrentIndex = 0;
+	cipherSolved = false;
+
+	if (cipherGrid) {
+		let buttons = cipherGrid.querySelectorAll(".cipherLetterBtn");
+		buttons.forEach(function (button) {
+			button.disabled = false;
+			button.classList.remove("cipherLetterUsed");
+		});
+	}
+
+	updateCipherProgressText();
+	if (cipherFeedback) {
+		cipherFeedback.textContent = message || "Zu viele Zeichen. Achte auf ein bekanntes Muster.";
+	}
+}
+
+function solveCipherPuzzle() {
+	cipherSolved = true;
+	if (cipherFeedback) {
+		cipherFeedback.textContent = "Die Maschine formt den Namen BLACKWOOD. Das wirkt fast zu sauber - vielleicht hat Voss diese Spur gelegt.";
+	}
+	if (cipherGrid) {
+		let buttons = cipherGrid.querySelectorAll(".cipherLetterBtn");
+		buttons.forEach(function (button) {
+			button.disabled = true;
+		});
+	}
+}
+
+function handleCipherLetterClick(button) {
+	if (!button || cipherSolved) {
+		return;
+	}
+
+	let letter = button.getAttribute("data-letter");
+	let expected = cipherTarget.charAt(cipherCurrentIndex);
+
+	if (letter !== expected) {
+		resetCipherPuzzle("Falsche Reihenfolge. Vielleicht soll dich genau das verwirren.");
+		return;
+	}
+
+	button.disabled = true;
+	button.classList.add("cipherLetterUsed");
+	cipherCurrentIndex += 1;
+	updateCipherProgressText();
+
+	if (cipherCurrentIndex >= cipherTarget.length) {
+		solveCipherPuzzle();
+	} else if (cipherFeedback) {
+		cipherFeedback.textContent = "Weiter so. Die Reihenfolge entscheidet.";
+	}
+}
+
+function renderCipherGrid() {
+	if (!cipherGrid) {
+		return;
+	}
+
+	cipherGrid.innerHTML = "";
+	cipherLetters.forEach(function (letter) {
+		let button = document.createElement("button");
+		button.type = "button";
+		button.className = "cipherLetterBtn";
+		button.textContent = letter;
+		button.setAttribute("data-letter", letter);
+		button.addEventListener("click", function () {
+			handleCipherLetterClick(button);
+		});
+		cipherGrid.appendChild(button);
+	});
+
+	updateCipherProgressText();
 }
 
 function updateSuspectSelectionUi() {
@@ -418,3 +542,23 @@ if (inventoryToggle && inventoryPanel) {
 		inventoryPanel.classList.toggle("inventoryHidden");
 	});
 }
+
+if (encryptionMachineBtn) {
+	encryptionMachineBtn.addEventListener("click", function () {
+		showHint();
+	});
+}
+
+if (closeHint) {
+	closeHint.addEventListener("click", function () {
+		closeHintText();
+	});
+}
+
+if (resetCipher) {
+	resetCipher.addEventListener("click", function () {
+		resetCipherPuzzle("Neu gestartet. Suche einen Nachnamen unter den Verdaechtigen.");
+	});
+}
+
+renderCipherGrid();

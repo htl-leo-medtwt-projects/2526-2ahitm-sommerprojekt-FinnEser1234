@@ -51,6 +51,10 @@
             <button type="button" id="deskLetterBtn" class="deskLetterBtn" aria-label="Brief auf dem Schreibtisch ansehen">
                 Brief
             </button>
+
+            <button type="button" id="encryptionMachineBtn" class="encryptionMachineBtn" aria-label="Verschlüsselungsmaschine untersuchen">
+                Verschlüsselungsmaschine
+            </button>
         </div>
     </section>
 
@@ -68,10 +72,22 @@
         <button type="button" id="closeLetterNote" class="caseStartButton">Schließen</button>
     </article>
 
+    <article id="hintCard" class="letterNoteCard cipherCard letterNoteHidden" aria-live="polite">
+        <h2>Verschluesselungsmaschine</h2>
+        <p id="hintText">Waehle Buchstaben in der richtigen Reihenfolge. Die Maschine zeigt dir nur eine Spur - vielleicht absichtlich gelegt.</p>
+        <p id="cipherProgress" class="cipherProgress">Fortschritt: _ _ _ _ _ _ _ _ _</p>
+        <p id="cipherFeedback" class="cipherFeedback">Zu viele Zeichen. Achte auf ein bekanntes Muster.</p>
+        <div id="cipherGrid" class="cipherGrid" aria-label="Buchstabenraetsel"></div>
+        <div class="cipherActions">
+            <button type="button" id="resetCipher" class="caseStartButton">Zuruecksetzen</button>
+            <button type="button" id="closeHint" class="caseStartButton">Schliessen</button>
+        </div>
+    </article>
+
     <section id="roomsModal" class="gameModal gameModalHidden" aria-modal="true" role="dialog" aria-label="Raumstatus">
         <div class="gameModalCard roomGridCard">
             <h2>Raumstatus</h2>
-            <p>Raumwechsel kommt später. Hier siehst du aktuell nur den Status.</p>
+            <p>Hier siehst du alle 6 Raeume und ihren aktuellen Ermittlungsstatus.</p>
             <div id="roomsGrid" class="roomsGrid"></div>
             <button type="button" id="closeRoomsBtn" class="caseStartButton">Schließen</button>
         </div>
@@ -80,11 +96,17 @@
     <section id="suspectsModal" class="gameModal gameModalHidden" aria-modal="true" role="dialog" aria-label="Verdächtige auswählen">
         <div class="gameModalCard suspectsCard">
             <h2>Verdächtige</h2>
-            <p>Wen willst du aktuell verdächtigen?</p>
+            <p class="suspectsIntro">Waehle eine aktuelle Hauptspur aus.</p>
+            <p class="suspectsHint">8 Personen stehen unter Verdacht. Die Maschine kann Hinweise liefern, aber auch in die Irre fuehren.</p>
             <div class="suspectsGrid">
                 <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Mara Voss">Mara Voss</button>
                 <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Inspektor Hale">Inspektor Hale</button>
-                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Der Silberfuchs">Der Silberfuchs</button>
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Nora Graves">Nora Graves</button>
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Elias Blackwood">Elias Blackwood</button>
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Jonas Reed">Jonas Reed</button>
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Selma Hart">Selma Hart</button>
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Dr. Quinn">Dr. Quinn</button>
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Luca Sterling">Luca Sterling</button>
             </div>
             <button type="button" id="closeSuspectsBtn" class="caseStartButton">Zurück</button>
         </div>

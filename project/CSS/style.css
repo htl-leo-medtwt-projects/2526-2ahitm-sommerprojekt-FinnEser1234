@@ -691,6 +691,19 @@ body.modalOpen {
     z-index: 4;
 }
 
+.encryptionMachineBtn {
+    position: absolute;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    color: transparent;
+    font-size: 0;
+    cursor: default;
+    opacity: 0;
+    outline: none;
+    z-index: 4;
+}
+
 .pinboardOverlay {
     position: fixed;
     inset: 0;
@@ -733,16 +746,29 @@ body.modalOpen {
 .suspectsCard {
     display: grid;
     gap: 10px;
+    width: min(980px, 95vw);
+}
+
+.suspectsIntro {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.suspectsHint {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #d1ba93;
 }
 
 .suspectsGrid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 10px;
 }
 
 .suspectPickBtn {
-    min-height: 82px;
+    min-height: 72px;
+    padding: 10px 8px;
 }
 
 .suspectSelected {
@@ -780,6 +806,67 @@ body.modalOpen {
 
 .letterNoteHidden {
     display: none;
+}
+
+.cipherCard {
+    width: min(94vw, 860px);
+}
+
+.cipherProgress {
+    font-size: 1.15rem;
+    letter-spacing: 0.08em;
+}
+
+.cipherFeedback {
+    font-size: 1rem;
+    color: #55381d;
+}
+
+.cipherGrid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.cipherLetterBtn {
+    border: 2px solid #8d6030;
+    background: #fff7e8;
+    color: #3a2817;
+    border-radius: 10px;
+    min-height: 56px;
+    font-family: Sherlock;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+.cipherLetterBtn:hover {
+    filter: brightness(0.96);
+}
+
+.cipherLetterUsed {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.cipherActions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+@media (max-width: 880px) {
+    .roomsGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .suspectsGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cipherGrid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
 }
 
 .inventoryToggle {
