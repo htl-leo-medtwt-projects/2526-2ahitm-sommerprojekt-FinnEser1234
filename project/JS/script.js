@@ -54,9 +54,6 @@ let inventoryPanel = document.getElementById("inventoryPanel");
 let inventoryEmptyText = document.getElementById("inventoryEmptyText");
 let inventoryFoundList = document.getElementById("inventoryFoundList");
 
-let rooms = [];
-let roomsDataPath = "../data/rooms.json";
-
 let currentRoomIndex = 0;
 let foundItems = [];
 let selectedSuspect = null;

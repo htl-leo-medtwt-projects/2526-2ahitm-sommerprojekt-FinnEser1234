@@ -1,4 +1,4 @@
-[
+const rooms = [
   {
     "name": "Wissenschaftsraum",
     "background": "url('../IMG/Wissenschaftsraum.png')",
