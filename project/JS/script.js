@@ -18,15 +18,20 @@ let detectiveGreeting = document.getElementById("detectiveGreeting");
 let setupError = document.getElementById("setupError");
 let gameShell = document.querySelector(".gameShell");
 let levelOne = document.getElementById("levelOne");
+let storyIntroModal = document.getElementById("storyIntroModal");
+let startFirstRoomBtn = document.getElementById("startFirstRoomBtn");
 
 let roomScene = document.getElementById("roomScene");
 let roomSwitchBtn = document.getElementById("roomSwitchBtn");
 let showSuspectsBtn = document.getElementById("showSuspectsBtn");
 let pinboardFocusBtn = document.getElementById("pinboardFocusBtn");
 let deskLetterBtn = document.getElementById("deskLetterBtn");
+let windowInspectBtn = document.getElementById("windowInspectBtn");
 
 let pinboardOverlay = document.getElementById("pinboardOverlay");
 let pinboardCloseBtn = document.getElementById("pinboardCloseBtn");
+let windowOverlay = document.getElementById("windowOverlay");
+let windowCloseBtn = document.getElementById("windowCloseBtn");
 let letterNoteCard = document.getElementById("letterNoteCard");
 let letterNoteText = document.getElementById("letterNoteText");
 let closeLetterNote = document.getElementById("closeLetterNote");
@@ -125,8 +130,32 @@ function updateBodyModalState() {
 	if (suspectsModal && !suspectsModal.classList.contains("gameModalHidden")) {
 		hasOpenModal = true;
 	}
+	if (windowOverlay && !windowOverlay.classList.contains("windowOverlayHidden")) {
+		hasOpenModal = true;
+	}
+	if (storyIntroModal && !storyIntroModal.classList.contains("gameModalHidden")) {
+		hasOpenModal = true;
+	}
 
 	document.body.classList.toggle("modalOpen", hasOpenModal);
+}
+
+function startFirstRoom() {
+	if (!gameShell || !levelOne) {
+		return;
+	}
+
+	if (storyIntroModal) {
+		storyIntroModal.classList.add("gameModalHidden");
+	}
+
+	gameShell.classList.add("levelHidden");
+	levelOne.classList.remove("levelHidden");
+	currentRoomIndex = 0;
+	applyRoom();
+	renderInventory();
+	renderRoomsGrid();
+	updateBodyModalState();
 }
 
 function applyRoom() {
@@ -141,6 +170,22 @@ function applyRoom() {
 	setHotspot(pinboardFocusBtn, room.pinboard);
 	setHotspot(deskLetterBtn, room.letter);
 	setHotspot(encryptionMachineBtn, room.encryption);
+
+	if (windowInspectBtn) {
+		if (currentRoomIndex === 0) {
+			setHotspot(windowInspectBtn, {
+				top: "22%",
+				left: "4%",
+				width: "30%",
+				height: "40%"
+			});
+			windowInspectBtn.style.display = "block";
+			windowInspectBtn.style.pointerEvents = "auto";
+		} else {
+			windowInspectBtn.style.display = "none";
+			windowInspectBtn.style.pointerEvents = "none";
+		}
+	}
 }
 
 function showLetterText(text) {
@@ -446,19 +491,25 @@ if (gameSetupModal && gameSetupForm && detectiveNameInput && caseStartBtn && det
 		caseStartBtn.textContent = "Abschnitt 1 gestartet";
 		caseStartBtn.disabled = true;
 
-		if (gameShell && levelOne) {
-			let roomsLoaded = await loadRoomsData();
-			if (!roomsLoaded) {
-				return;
-			}
-
-			gameShell.classList.add("levelHidden");
-			levelOne.classList.remove("levelHidden");
-			currentRoomIndex = 0;
-			applyRoom();
-			renderInventory();
-			renderRoomsGrid();
+		let roomsLoaded = await loadRoomsData();
+		if (!roomsLoaded) {
+			caseStartBtn.textContent = "Fall starten";
+			caseStartBtn.disabled = false;
+			return;
 		}
+
+		if (storyIntroModal) {
+			storyIntroModal.classList.remove("gameModalHidden");
+			updateBodyModalState();
+		} else {
+			startFirstRoom();
+		}
+	});
+}
+
+if (startFirstRoomBtn) {
+	startFirstRoomBtn.addEventListener("click", function () {
+		startFirstRoom();
 	});
 }
 
@@ -495,6 +546,24 @@ if (pinboardFocusBtn) {
 if (pinboardCloseBtn && pinboardOverlay) {
 	pinboardCloseBtn.addEventListener("click", function () {
 		pinboardOverlay.classList.add("pinboardOverlayHidden");
+		updateBodyModalState();
+	});
+}
+
+if (windowInspectBtn) {
+	windowInspectBtn.addEventListener("click", function () {
+		if (currentRoomIndex !== 0 || !windowOverlay) {
+			return;
+		}
+
+		windowOverlay.classList.remove("windowOverlayHidden");
+		updateBodyModalState();
+	});
+}
+
+if (windowCloseBtn && windowOverlay) {
+	windowCloseBtn.addEventListener("click", function () {
+		windowOverlay.classList.add("windowOverlayHidden");
 		updateBodyModalState();
 	});
 }
