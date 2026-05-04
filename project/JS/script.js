@@ -40,6 +40,10 @@ let pinboardOverlay = document.getElementById("pinboardOverlay");
 let pinboardCloseBtn = document.getElementById("pinboardCloseBtn");
 let windowOverlay = document.getElementById("windowOverlay");
 let windowCloseBtn = document.getElementById("windowCloseBtn");
+let mapOverlay = document.getElementById("mapOverlay");
+let mapCloseBtn = document.getElementById("mapCloseBtn");
+let mapVossBtn = document.getElementById("mapVossBtn");
+let mapBlackwoodBtn = document.getElementById("mapBlackwoodBtn");
 let letterNoteCard = document.getElementById("letterNoteCard");
 let letterNoteText = document.getElementById("letterNoteText");
 let closeLetterNote = document.getElementById("closeLetterNote");
@@ -286,6 +290,21 @@ function showHint(text) {
 function closeHintText() {
 	if (hintCard) {
 		hintCard.classList.add("letterNoteHidden");
+	}
+}
+
+function showMap() {
+	if (!mapOverlay) {
+		return;
+	}
+	mapOverlay.classList.remove("mapOverlayHidden");
+	updateBodyModalState();
+}
+
+function closeMapText() {
+	if (mapOverlay) {
+		mapOverlay.classList.add("mapOverlayHidden");
+		updateBodyModalState();
 	}
 }
 
@@ -666,7 +685,12 @@ mapPieceButtons.forEach(function (button, index) {
 				rooms[currentRoomIndex].found = true;
 			}
 			renderRoomsGrid();
-			showHint("Die Karte nimmt Form an. Etwas daran passt nicht zusammen.");
+			// Only show map in Level 2 (Apartment), not in other rooms
+			if (currentRoomIndex === 1) {
+				showMap();
+			} else {
+				showHint("Die Karte nimmt Form an. Etwas daran passt nicht zusammen.");
+			}
 		}
 	});
 });
@@ -675,6 +699,12 @@ if (windowCloseBtn && windowOverlay) {
 	windowCloseBtn.addEventListener("click", function () {
 		windowOverlay.classList.add("windowOverlayHidden");
 		updateBodyModalState();
+	});
+}
+
+if (mapCloseBtn && mapOverlay) {
+	mapCloseBtn.addEventListener("click", function () {
+		closeMapText();
 	});
 }
 
@@ -734,6 +764,30 @@ if (closeHint) {
 if (resetCipher) {
 	resetCipher.addEventListener("click", function () {
 		resetCipherPuzzle("Neu gestartet. Suche einen Nachnamen unter den Verdaechtigen.");
+	});
+}
+
+if (mapVossBtn) {
+	mapVossBtn.addEventListener("click", function () {
+		closeMapText();
+		// Select Voss suspect and open suspects modal
+		selectedSuspect = "Mara Voss";
+		if (suspectsModal) {
+			suspectsModal.classList.remove("gameModalHidden");
+			updateBodyModalState();
+		}
+	});
+}
+
+if (mapBlackwoodBtn) {
+	mapBlackwoodBtn.addEventListener("click", function () {
+		closeMapText();
+		// Select Blackwood suspect and open suspects modal
+		selectedSuspect = "Elias Blackwood";
+		if (suspectsModal) {
+			suspectsModal.classList.remove("gameModalHidden");
+			updateBodyModalState();
+		}
 	});
 }
 

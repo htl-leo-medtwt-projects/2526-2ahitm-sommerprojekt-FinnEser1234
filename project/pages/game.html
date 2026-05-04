@@ -109,6 +109,17 @@
         <img src="../IMG/FensterWissenschaftsraum.png" alt="Blick aus dem Fenster im Wissenschaftsraum" class="windowOverlayImage">
     </section>
 
+    <section id="mapOverlay" class="mapOverlay mapOverlayHidden" aria-modal="true" role="dialog" aria-label="Karte mit Spuren">
+        <button type="button" id="mapCloseBtn" class="pinboardCloseBtn" aria-label="Karte schließen">
+            Zurück
+        </button>
+        <div class="mapContainer">
+            <img src="../IMG/FullMap.png" alt="Karte mit den beiden Spuren" class="mapOverlayImage">
+            <button type="button" id="mapVossBtn" class="mapTraceBtn mapVossBtn" aria-label="Spur von Voss" title="Spur: Voss"></button>
+            <button type="button" id="mapBlackwoodBtn" class="mapTraceBtn mapBlackwoodBtn" aria-label="Spur von Blackwood" title="Spur: Blackwood"></button>
+        </div>
+    </section>
+
     <article id="letterNoteCard" class="letterNoteCard letterNoteHidden" aria-live="polite">
         <h2>Brief</h2>
         <p id="letterNoteText"></p>
