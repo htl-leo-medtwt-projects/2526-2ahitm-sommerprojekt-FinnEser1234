@@ -410,6 +410,27 @@ function updateSuspectSelectionUi() {
 	});
 }
 
+function chooseSuspect(suspectName) {
+	if (!suspectName) return;
+	selectedSuspect = suspectName;
+
+	// find suspect apartment indices
+	var blackIndex = rooms.findIndex(function (r) { return r.name && r.name.toLowerCase().includes('blackwood'); });
+	var vossIndex = rooms.findIndex(function (r) { return r.name && r.name.toLowerCase().includes('voss'); });
+
+	// If Blackwood chosen, ensure Voss locked; if Voss chosen, ensure Blackwood locked
+	if (suspectName.toLowerCase().includes('blackwood')) {
+		if (blackIndex !== -1) rooms[blackIndex].unlocked = true;
+		if (vossIndex !== -1) rooms[vossIndex].unlocked = false;
+	} else if (suspectName.toLowerCase().includes('voss')) {
+		if (vossIndex !== -1) rooms[vossIndex].unlocked = true;
+		if (blackIndex !== -1) rooms[blackIndex].unlocked = false;
+	}
+
+	updateSuspectSelectionUi();
+	renderRoomsGrid();
+}
+
 function countMapPiecesFound() {
 	return foundItems.filter(function (item) {
 		return item.key.indexOf("map_piece_") === 0;
@@ -736,8 +757,8 @@ if (closeSuspectsBtn) {
 if (suspectPickButtons.length > 0) {
 	suspectPickButtons.forEach(function (button) {
 		button.addEventListener("click", function () {
-			selectedSuspect = button.getAttribute("data-suspect");
-			updateSuspectSelectionUi();
+			var suspect = button.getAttribute("data-suspect");
+			chooseSuspect(suspect);
 			closeSuspectsModal();
 		});
 	});
@@ -770,24 +791,42 @@ if (resetCipher) {
 if (mapVossBtn) {
 	mapVossBtn.addEventListener("click", function () {
 		closeMapText();
-		// Select Voss suspect and open suspects modal
-		selectedSuspect = "Mara Voss";
-		if (suspectsModal) {
-			suspectsModal.classList.remove("gameModalHidden");
-			updateBodyModalState();
+		// Upper box: navigate to Blackwood's apartment (per user request)
+		chooseSuspect("Elias Blackwood");
+		var blackIndex = rooms.findIndex(function (r) { return r.name && r.name.toLowerCase().includes('blackwood'); });
+		if (blackIndex === -1) {
+			if (suspectsModal) {
+				suspectsModal.classList.remove('gameModalHidden');
+				updateBodyModalState();
+			}
+			return;
 		}
+		currentRoomIndex = blackIndex;
+		applyRoom();
+		renderInventory();
+		renderRoomsGrid();
+		updateBodyModalState();
 	});
 }
 
 if (mapBlackwoodBtn) {
 	mapBlackwoodBtn.addEventListener("click", function () {
 		closeMapText();
-		// Select Blackwood suspect and open suspects modal
-		selectedSuspect = "Elias Blackwood";
-		if (suspectsModal) {
-			suspectsModal.classList.remove("gameModalHidden");
-			updateBodyModalState();
+		// Lower box: navigate to Voss's apartment (per user request)
+		chooseSuspect("Mara Voss");
+		var vossIndex = rooms.findIndex(function (r) { return r.name && r.name.toLowerCase().includes('voss'); });
+		if (vossIndex === -1) {
+			if (suspectsModal) {
+				suspectsModal.classList.remove('gameModalHidden');
+				updateBodyModalState();
+			}
+			return;
 		}
+		currentRoomIndex = vossIndex;
+		applyRoom();
+		renderInventory();
+		renderRoomsGrid();
+		updateBodyModalState();
 	});
 }
 

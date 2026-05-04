@@ -24,39 +24,21 @@ window.rooms = [
     ]
   },
   {
-    "name": "Beweiswand",
-    "background": "url('../IMG/Pinboard.png')",
-    "unlocked": false,
+    "name": "Blackwood Apartment",
+    "background": "url('../IMG/ApartmentBlackwood.png')",
+    "unlocked": true,
     "found": false,
-    "pinboard": { "top": "8%", "left": "16%", "width": "68%", "height": "64%" },
-    "letter": { "top": "64%", "left": "61%", "width": "96px", "height": "72px" },
-    "encryption": { "top": "50%", "left": "80%", "width": "15%", "height": "20%" }
+    "pinboard": { "top": "10%", "left": "10%", "width": "22%", "height": "30%" },
+    "letter": { "top": "69%", "left": "58%", "width": "94px", "height": "72px" },
+    "encryption": { "top": "35%", "left": "82%", "width": "15%", "height": "20%" }
   },
   {
-    "name": "Archivraum",
-    "background": "url('../IMG/Apartment.png')",
-    "unlocked": false,
+    "name": "Voss Apartment",
+    "background": "url('../IMG/ApartmentVoss.png')",
+    "unlocked": true,
     "found": false,
-    "pinboard": { "top": "14%", "left": "58%", "width": "24%", "height": "30%" },
-    "letter": { "top": "73%", "left": "34%", "width": "98px", "height": "72px" },
-    "encryption": { "top": "40%", "left": "78%", "width": "14%", "height": "20%" }
-  },
-  {
-    "name": "Laborflur",
-    "background": "url('../IMG/Wissenschaftsraum.png')",
-    "unlocked": false,
-    "found": false,
-    "pinboard": { "top": "11%", "left": "12%", "width": "20%", "height": "34%" },
-    "letter": { "top": "70%", "left": "67%", "width": "92px", "height": "68px" },
-    "encryption": { "top": "33%", "left": "80%", "width": "15%", "height": "22%" }
-  },
-  {
-    "name": "Dachboden",
-    "background": "url('../IMG/Pinboard.png')",
-    "unlocked": false,
-    "found": false,
-    "pinboard": { "top": "9%", "left": "22%", "width": "60%", "height": "58%" },
-    "letter": { "top": "67%", "left": "24%", "width": "96px", "height": "72px" },
-    "encryption": { "top": "48%", "left": "82%", "width": "14%", "height": "20%" }
+    "pinboard": { "top": "10%", "left": "10%", "width": "22%", "height": "30%" },
+    "letter": { "top": "69%", "left": "58%", "width": "94px", "height": "72px" },
+    "encryption": { "top": "35%", "left": "82%", "width": "15%", "height": "20%" }
   }
-]
+];
