@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Der letzte Fall</title>
 
-   <link rel="stylesheet" href="../CSS/style.css">
-    <script src="../JS/script.js" defer></script>
+    <link rel="stylesheet" href="../CSS/style.css">
     <script src="../data/rooms.js" defer></script>
+    <script src="../JS/script.js" defer></script>
 </head>
 <body id="gameBody">
     <a href="../index.html" class="gameBack" aria-label="Zur Startseite">
@@ -38,19 +38,25 @@
         <div class="gameModalCard storyIntroCard">
             <h2>Was bisher geschah</h2>
             <p>
-                Kurz vor deiner Ankunft ist im Labor etwas passiert, das nicht in den offiziellen Berichten steht.
-                Mehrere Aussagen widersprechen sich, und jemand versucht, Spuren gezielt zu lenken.
+                Im Labor wurde etwas verschoben, bevor du ankamst. Die Spuren lügen nicht, aber sie sagen auch nicht alles.
             </p>
             <p>
-                Dein erstes Ziel: Finde die ersten zwei belastbaren Hinweise, um den nächsten Raum freizuschalten.
+                Halte dich an das, was sichtbar ist. Der Rest ergibt sich nur, wenn du den Raum wirklich liest.
             </p>
-            <p class="storyHintTitle">Worauf du im Raum klicken kannst:</p>
-            <ul class="storyHintList">
-                <li>Suche nach Dingen, die sichtbar platziert wurden, als sollten sie sofort auffallen.</li>
-                <li>Achte auf Schriftstücke, Namen und Formulierungen, die zu eindeutig wirken.</li>
-                <li>Untersuche technische Geraete genau, wenn sie eine Reihenfolge oder ein Muster andeuten.</li>
-            </ul>
             <button type="button" id="startFirstRoomBtn" class="caseStartButton">In den ersten Raum starten</button>
+        </div>
+    </section>
+
+    <section id="storyAfterFirstLevelModal" class="gameModal gameModalHidden" aria-modal="true" role="dialog" aria-label="Uebergang zum naechsten Raum">
+        <div class="gameModalCard storyIntroCard storyTransitionCard">
+            <h2>Der nächste Raum</h2>
+            <p>
+                Etwas an den ersten Spuren passt nicht zusammen. Im nächsten Raum hat jemand die Antwort nicht versteckt, sondern verteilt.
+            </p>
+            <p>
+                Vier Teile liegen am Boden. Keine Markierungen, keine Hinweise, nur der Raum selbst.
+            </p>
+            <button type="button" id="startSecondRoomBtn" class="caseStartButton">Weiter</button>
         </div>
     </section>
 
@@ -80,6 +86,11 @@
             <button type="button" id="windowInspectBtn" class="windowInspectBtn" aria-label="Fenster ansehen">
                 Fenster ansehen
             </button>
+
+            <button type="button" id="mapPieceBtn1" class="mapPieceBtn" aria-label="Kartenteil 1 aufnehmen">1</button>
+            <button type="button" id="mapPieceBtn2" class="mapPieceBtn" aria-label="Kartenteil 2 aufnehmen">2</button>
+            <button type="button" id="mapPieceBtn3" class="mapPieceBtn" aria-label="Kartenteil 3 aufnehmen">3</button>
+            <button type="button" id="mapPieceBtn4" class="mapPieceBtn" aria-label="Kartenteil 4 aufnehmen">4</button>
         </div>
     </section>
 

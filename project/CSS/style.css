@@ -589,6 +589,10 @@ body.modalOpen {
     margin: 2px 0;
 }
 
+.storyTransitionCard {
+    width: min(820px, 96vw);
+}
+
 .levelSection {
     width: 100%;
     height: 100vh;
@@ -689,54 +693,82 @@ body.modalOpen {
 
 .pinboardFocusBtn {
     position: absolute;
-    border: none;
+    border: 2px solid rgba(255, 227, 186, 0.7);
     border-radius: 0;
-    background: transparent;
-    color: transparent;
+    background: rgba(30, 21, 12, 0.28);
+    color: rgba(255, 241, 220, 0.9);
     font-size: 0;
     cursor: default;
-    opacity: 0;
+    opacity: 0.95;
     outline: none;
-    z-index: 4;
+    z-index: 6;
 }
 
 .deskLetterBtn {
     position: absolute;
-    border: none;
+    border: 2px solid rgba(255, 227, 186, 0.7);
     border-radius: 0;
-    background: transparent;
-    color: transparent;
+    background: rgba(30, 21, 12, 0.28);
+    color: rgba(255, 241, 220, 0.9);
     font-size: 0;
     cursor: default;
-    opacity: 0;
+    opacity: 0.95;
     outline: none;
-    z-index: 4;
+    z-index: 6;
 }
 
 .encryptionMachineBtn {
     position: absolute;
-    border: none;
+    border: 2px solid rgba(255, 227, 186, 0.7);
     border-radius: 0;
-    background: transparent;
-    color: transparent;
+    background: rgba(30, 21, 12, 0.28);
+    color: rgba(255, 241, 220, 0.9);
     font-size: 0;
     cursor: default;
-    opacity: 0;
+    opacity: 0.95;
     outline: none;
-    z-index: 4;
+    z-index: 3;
 }
 
 .windowInspectBtn {
     position: absolute;
-    border: none;
+    border: 2px solid rgba(255, 227, 186, 0.7);
     border-radius: 0;
-    background: transparent;
-    color: transparent;
+    background: rgba(30, 21, 12, 0.28);
+    color: rgba(255, 241, 220, 0.9);
     font-size: 0;
     cursor: default;
-    opacity: 0;
+    opacity: 0.95;
     outline: none;
-    z-index: 4;
+    z-index: 6;
+}
+
+.mapPieceBtn {
+    position: absolute;
+    border: 2px solid rgba(255, 227, 186, 0.72);
+    border-radius: 14px;
+    background: rgba(30, 21, 12, 0.38);
+    color: rgba(255, 241, 220, 0.88);
+    font-family: Sherlock;
+    font-size: 1.4rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+    display: none;
+    cursor: pointer;
+    outline: none;
+    z-index: 5;
+    opacity: 1;
+    transition: opacity 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18) inset, 0 8px 22px rgba(0, 0, 0, 0.18);
+}
+
+.mapPieceBoxVisible {
+    background: rgba(52, 36, 18, 0.42);
+}
+
+.mapPieceBtn:hover {
+    opacity: 1;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18) inset, 0 0 25px rgba(255, 215, 0, 0.7), 0 8px 22px rgba(0, 0, 0, 0.18);
+    filter: brightness(1.08);
 }
 
 .pinboardOverlay {

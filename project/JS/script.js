@@ -20,6 +20,8 @@ let gameShell = document.querySelector(".gameShell");
 let levelOne = document.getElementById("levelOne");
 let storyIntroModal = document.getElementById("storyIntroModal");
 let startFirstRoomBtn = document.getElementById("startFirstRoomBtn");
+let storyAfterFirstLevelModal = document.getElementById("storyAfterFirstLevelModal");
+let startSecondRoomBtn = document.getElementById("startSecondRoomBtn");
 
 let roomScene = document.getElementById("roomScene");
 let roomSwitchBtn = document.getElementById("roomSwitchBtn");
@@ -27,6 +29,12 @@ let showSuspectsBtn = document.getElementById("showSuspectsBtn");
 let pinboardFocusBtn = document.getElementById("pinboardFocusBtn");
 let deskLetterBtn = document.getElementById("deskLetterBtn");
 let windowInspectBtn = document.getElementById("windowInspectBtn");
+let mapPieceButtons = [
+	document.getElementById("mapPieceBtn1"),
+	document.getElementById("mapPieceBtn2"),
+	document.getElementById("mapPieceBtn3"),
+	document.getElementById("mapPieceBtn4")
+];
 
 let pinboardOverlay = document.getElementById("pinboardOverlay");
 let pinboardCloseBtn = document.getElementById("pinboardCloseBtn");
@@ -62,40 +70,31 @@ let inventoryFoundList = document.getElementById("inventoryFoundList");
 let currentRoomIndex = 0;
 let foundItems = [];
 let selectedSuspect = null;
+let firstLevelTransitionShown = false;
 
 let cipherTarget = "BLACKWOOD";
 let cipherLetters = ["B", "A", "R", "L", "M", "Q", "A", "C", "K", "T", "W", "Y", "O", "O", "D", "N", "E", "S"];
 let cipherCurrentIndex = 0;
 let cipherSolved = false;
+let rooms = window.rooms || [];
 
 async function loadRoomsData() {
-	if (rooms.length > 0) {
+	if (Array.isArray(rooms) && rooms.length > 0) {
 		return true;
 	}
 
-	try {
-		let response = await fetch(roomsDataPath);
-		if (!response.ok) {
-			throw new Error("Raumdaten konnten nicht geladen werden.");
-		}
-
-		let parsedRooms = await response.json();
-		if (!Array.isArray(parsedRooms) || parsedRooms.length === 0) {
-			throw new Error("Raumdaten sind leer oder ungueltig.");
-		}
-
-		rooms = parsedRooms;
+	if (Array.isArray(window.rooms) && window.rooms.length > 0) {
+		rooms = window.rooms;
 		return true;
-	} catch (error) {
-		rooms = [];
-		if (roomSwitchBtn) {
-			roomSwitchBtn.textContent = "Raumstatus: keine Daten";
-		}
-		if (setupError) {
-			setupError.textContent = "Raumdaten konnten nicht geladen werden.";
-		}
-		return false;
 	}
+
+	if (roomSwitchBtn) {
+		roomSwitchBtn.textContent = "Raumstatus: keine Daten";
+	}
+	if (setupError) {
+		setupError.textContent = "Raumdaten konnten nicht geladen werden.";
+	}
+	return false;
 }
 
 function roomHasBothFinds(roomIndex) {
@@ -136,6 +135,9 @@ function updateBodyModalState() {
 	if (storyIntroModal && !storyIntroModal.classList.contains("gameModalHidden")) {
 		hasOpenModal = true;
 	}
+	if (storyAfterFirstLevelModal && !storyAfterFirstLevelModal.classList.contains("gameModalHidden")) {
+		hasOpenModal = true;
+	}
 
 	document.body.classList.toggle("modalOpen", hasOpenModal);
 }
@@ -167,9 +169,51 @@ function applyRoom() {
 	roomScene.style.backgroundImage = room.background;
 	roomSwitchBtn.textContent = "Raumstatus: " + room.name;
 
-	setHotspot(pinboardFocusBtn, room.pinboard);
-	setHotspot(deskLetterBtn, room.letter);
-	setHotspot(encryptionMachineBtn, room.encryption);
+	if (pinboardFocusBtn) {
+		if (currentRoomIndex === 0) {
+			setHotspot(pinboardFocusBtn, room.pinboard);
+		}
+		pinboardFocusBtn.style.display = currentRoomIndex === 0 ? "block" : "none";
+		pinboardFocusBtn.style.pointerEvents = currentRoomIndex === 0 ? "auto" : "none";
+	}
+	if (deskLetterBtn) {
+		if (currentRoomIndex === 0) {
+			setHotspot(deskLetterBtn, room.letter);
+		}
+		deskLetterBtn.style.display = currentRoomIndex === 0 ? "block" : "none";
+		deskLetterBtn.style.pointerEvents = currentRoomIndex === 0 ? "auto" : "none";
+	}
+	if (encryptionMachineBtn) {
+		if (currentRoomIndex === 0) {
+			setHotspot(encryptionMachineBtn, room.encryption);
+		}
+		encryptionMachineBtn.style.display = currentRoomIndex === 0 ? "block" : "none";
+		encryptionMachineBtn.style.pointerEvents = currentRoomIndex === 0 ? "auto" : "none";
+	}
+
+	if (mapPieceButtons.length > 0) {
+		mapPieceButtons.forEach(function (button) {
+			if (button) {
+				button.style.display = "none";
+				button.style.pointerEvents = "none";
+				button.classList.remove("mapPieceBoxVisible");
+			}
+		});
+	}
+
+	if (currentRoomIndex === 1 && Array.isArray(room.mapPieces)) {
+		room.mapPieces.forEach(function (position, index) {
+			let button = mapPieceButtons[index];
+			if (!button) {
+				return;
+			}
+
+			setHotspot(button, position);
+			button.classList.add("mapPieceBoxVisible");
+			button.style.display = "block";
+			button.style.pointerEvents = "auto";
+		});
+	}
 
 	if (windowInspectBtn) {
 		if (currentRoomIndex === 0) {
@@ -186,6 +230,31 @@ function applyRoom() {
 			windowInspectBtn.style.pointerEvents = "none";
 		}
 	}
+}
+
+function hideTransitionStory() {
+	if (storyAfterFirstLevelModal) {
+		storyAfterFirstLevelModal.classList.add("gameModalHidden");
+	}
+	updateBodyModalState();
+}
+
+function showTransitionStory() {
+	if (!storyAfterFirstLevelModal) {
+		return;
+	}
+
+	storyAfterFirstLevelModal.classList.remove("gameModalHidden");
+	updateBodyModalState();
+}
+
+function startSecondRoom() {
+	hideTransitionStory();
+	currentRoomIndex = 1;
+	applyRoom();
+	renderInventory();
+	renderRoomsGrid();
+	updateBodyModalState();
 }
 
 function showLetterText(text) {
@@ -322,7 +391,13 @@ function updateSuspectSelectionUi() {
 	});
 }
 
-function addFoundItem(itemKey, title, sourceRoomIndex) {
+function countMapPiecesFound() {
+	return foundItems.filter(function (item) {
+		return item.key.indexOf("map_piece_") === 0;
+	}).length;
+}
+
+function addFoundItem(itemKey, title, sourceRoomIndex, shouldMarkRoomFound) {
 	if (!rooms[sourceRoomIndex]) {
 		return;
 	}
@@ -337,10 +412,18 @@ function addFoundItem(itemKey, title, sourceRoomIndex) {
 		roomName: rooms[sourceRoomIndex].name
 	});
 
-	rooms[sourceRoomIndex].found = true;
+	if (shouldMarkRoomFound !== false) {
+		rooms[sourceRoomIndex].found = true;
+	}
 	if (roomHasBothFinds(sourceRoomIndex) && sourceRoomIndex < rooms.length - 1) {
 		rooms[sourceRoomIndex + 1].unlocked = true;
 	}
+
+	if (sourceRoomIndex === 0 && roomHasBothFinds(0) && !firstLevelTransitionShown) {
+		firstLevelTransitionShown = true;
+		showTransitionStory();
+	}
+
 	renderInventory();
 	renderRoomsGrid();
 }
@@ -513,6 +596,12 @@ if (startFirstRoomBtn) {
 	});
 }
 
+if (startSecondRoomBtn) {
+	startSecondRoomBtn.addEventListener("click", function () {
+		startSecondRoom();
+	});
+}
+
 if (roomSwitchBtn) {
 	roomSwitchBtn.addEventListener("click", function () {
 		openRoomsModal();
@@ -560,6 +649,27 @@ if (windowInspectBtn) {
 		updateBodyModalState();
 	});
 }
+
+mapPieceButtons.forEach(function (button, index) {
+	if (!button) {
+		return;
+	}
+
+	button.addEventListener("click", function () {
+		let itemKey = "map_piece_" + index;
+		addFoundItem(itemKey, "Kartenteil " + (index + 1), currentRoomIndex, false);
+		button.style.display = "none";
+		button.style.pointerEvents = "none";
+		button.classList.remove("mapPieceBoxVisible");
+		if (countMapPiecesFound() === mapPieceButtons.filter(Boolean).length) {
+			if (rooms[currentRoomIndex]) {
+				rooms[currentRoomIndex].found = true;
+			}
+			renderRoomsGrid();
+			showHint("Die Karte nimmt Form an. Etwas daran passt nicht zusammen.");
+		}
+	});
+});
 
 if (windowCloseBtn && windowOverlay) {
 	windowCloseBtn.addEventListener("click", function () {
