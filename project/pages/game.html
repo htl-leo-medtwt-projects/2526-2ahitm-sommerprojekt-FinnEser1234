@@ -69,6 +69,12 @@
                 <button type="button" id="showSuspectsBtn" class="caseStartButton" aria-label="Verdächtige anzeigen">
                     Verdächtige
                 </button>
+                <div id="gameHud" class="gameHud">
+                    <span id="scoreDisplay">Punkte: 0</span>
+                    <span id="timerDisplay">Zeit: 05:00</span>
+                    <span id="livesDisplay">Lives: 3</span>
+                    <button type="button" id="accuseBtn" class="caseStartButton">Beschuldigen</button>
+                </div>
             </div>
 
             <button type="button" id="pinboardFocusBtn" class="pinboardFocusBtn" aria-label="Pinnwand untersuchen">
@@ -162,7 +168,18 @@
                 <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Dr. Quinn">Dr. Quinn</button>
                 <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Luca Sterling">Luca Sterling</button>
             </div>
+            <button type="button" id="finalizeAccuseBtn" class="caseStartButton">Beschuldigen</button>
             <button type="button" id="closeSuspectsBtn" class="caseStartButton">Zurück</button>
+        </div>
+    </section>
+
+    <section id="resultModal" class="gameModal gameModalHidden" aria-modal="true" role="dialog" aria-label="Ergebnis">
+        <div class="gameModalCard resultCard">
+            <h2 id="resultTitle">Ergebnis</h2>
+            <p id="resultText"></p>
+            <p id="resultScoreText"></p>
+            <button type="button" id="restartBtn" class="caseStartButton">Neustarten</button>
+            <a href="../index.html" class="caseStartButton">Zur Startseite</a>
         </div>
     </section>
 

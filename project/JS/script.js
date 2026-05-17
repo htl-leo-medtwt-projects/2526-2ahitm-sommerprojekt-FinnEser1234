@@ -82,6 +82,102 @@ let cipherCurrentIndex = 0;
 let cipherSolved = false;
 let rooms = window.rooms || [];
 
+// Game state: score, timer, lives
+let score = 0;
+let timerSeconds = 300; // default 5 minutes
+let timerInterval = null;
+let lives = 3;
+let finalAccuseMode = false;
+const guiltySuspect = "Elias Blackwood";
+
+function formatTime(sec) {
+	let m = Math.floor(sec / 60);
+	let s = sec % 60;
+	return (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+}
+
+function updateHUD() {
+	let scoreDisplay = document.getElementById('scoreDisplay');
+	let timerDisplay = document.getElementById('timerDisplay');
+	let livesDisplay = document.getElementById('livesDisplay');
+	if (scoreDisplay) scoreDisplay.textContent = 'Punkte: ' + score;
+	if (timerDisplay) timerDisplay.textContent = 'Zeit: ' + formatTime(timerSeconds);
+	if (livesDisplay) livesDisplay.textContent = 'Lives: ' + lives;
+}
+
+function startTimer() {
+	stopTimer();
+	timerInterval = setInterval(function () {
+		timerSeconds -= 1;
+		updateHUD();
+		if (timerSeconds <= 0) {
+			stopTimer();
+			handleTimeOut();
+		}
+	}, 1000);
+}
+
+function stopTimer() {
+	if (timerInterval) {
+		clearInterval(timerInterval);
+		timerInterval = null;
+	}
+}
+
+function addScore(amount) {
+	score += amount;
+	updateHUD();
+}
+
+function loseLife(amount) {
+	lives -= (amount || 1);
+	if (lives < 0) lives = 0;
+	updateHUD();
+	if (lives <= 0) {
+		handleGameOver(false, 'Du hast alle Lives verloren.');
+	}
+}
+
+function handleTimeOut() {
+	handleGameOver(false, 'Die Zeit ist abgelaufen. Der Fall bleibt ungelöst.');
+}
+
+function handleGameOver(won, message) {
+	stopTimer();
+	finalAccuseMode = false;
+	let resultModal = document.getElementById('resultModal');
+	let resultTitle = document.getElementById('resultTitle');
+	let resultText = document.getElementById('resultText');
+	let resultScoreText = document.getElementById('resultScoreText');
+	if (resultTitle) resultTitle.textContent = won ? 'Du hast gewonnen!' : 'Fall gescheitert';
+	if (resultText) resultText.textContent = message || (won ? 'Du hast den wahren Täter gefunden.' : 'Leider falsch.');
+	if (resultScoreText) resultScoreText.textContent = 'Punkte: ' + score;
+	if (resultModal) {
+		resultModal.classList.remove('gameModalHidden');
+		updateBodyModalState();
+	}
+
+	// save highscore
+	try {
+		let best = parseInt(localStorage.getItem('bestScore') || '0', 10);
+		if (score > best) {
+			localStorage.setItem('bestScore', String(score));
+		}
+		localStorage.setItem('lastResult', JSON.stringify({ won: won, score: score, suspect: selectedSuspect || null, time: Date.now() }));
+	} catch (e) { }
+}
+
+function checkAllLevelsCompleted() {
+	if (!Array.isArray(rooms) || rooms.length === 0) return false;
+	let allFound = rooms.every(function (r) { return !!r.found; });
+	if (allFound) {
+		// prompt final accusation
+		finalAccuseMode = true;
+		openSuspectsModal();
+	}
+	return allFound;
+}
+
 async function loadRoomsData() {
 	if (Array.isArray(rooms) && rooms.length > 0) {
 		return true;
@@ -161,7 +257,20 @@ function startFirstRoom() {
 	applyRoom();
 	renderInventory();
 	renderRoomsGrid();
+
+	// persist progress (basic)
+	try {
+		localStorage.setItem('foundItems', JSON.stringify(foundItems));
+		localStorage.setItem('roomsState', JSON.stringify(rooms.map(function (r) { return { name: r.name, unlocked: !!r.unlocked, found: !!r.found }; })));
+	} catch (e) { }
 	updateBodyModalState();
+
+	// initialize game state (score, timer, lives)
+	score = 0;
+	timerSeconds = 300;
+	lives = 3;
+	updateHUD();
+	startTimer();
 }
 
 function applyRoom() {
@@ -351,6 +460,9 @@ function solveCipherPuzzle() {
 			button.disabled = true;
 		});
 	}
+
+	// reward solving the cipher
+	addScore(200);
 }
 
 function handleCipherLetterClick(button) {
@@ -452,6 +564,9 @@ function addFoundItem(itemKey, title, sourceRoomIndex, shouldMarkRoomFound) {
 		roomName: rooms[sourceRoomIndex].name
 	});
 
+	// reward points for finding a new item
+	addScore(100);
+
 	if (shouldMarkRoomFound !== false) {
 		rooms[sourceRoomIndex].found = true;
 	}
@@ -466,6 +581,9 @@ function addFoundItem(itemKey, title, sourceRoomIndex, shouldMarkRoomFound) {
 
 	renderInventory();
 	renderRoomsGrid();
+
+	// check if all levels are completed -> allow final accusation
+	checkAllLevelsCompleted();
 }
 
 function renderInventory() {
@@ -831,6 +949,46 @@ if (mapBlackwoodBtn) {
 }
 
 renderCipherGrid();
+
+// HUD initial update
+updateHUD();
+
+function finalizeAccusation() {
+	if (!selectedSuspect) {
+		showHint('Wähle zuerst einen Verdächtigen.');
+		return;
+	}
+	closeSuspectsModal();
+	if (selectedSuspect === guiltySuspect) {
+		handleGameOver(true, 'Deine Anklage war korrekt! Der wahre Täter wurde gestellt.');
+	} else {
+		handleGameOver(false, 'Falsche Beschuldigung: ' + selectedSuspect + '. Der Fall bleibt ungelöst.');
+	}
+}
+
+// Button: accuse from HUD
+let accuseBtnEl = document.getElementById('accuseBtn');
+if (accuseBtnEl) {
+	accuseBtnEl.addEventListener('click', function () {
+		finalAccuseMode = true;
+		openSuspectsModal();
+	});
+}
+
+let finalizeAccuseBtnEl = document.getElementById('finalizeAccuseBtn');
+if (finalizeAccuseBtnEl) {
+	finalizeAccuseBtnEl.addEventListener('click', function () {
+		finalizeAccusation();
+	});
+}
+
+let restartBtnEl = document.getElementById('restartBtn');
+if (restartBtnEl) {
+	restartBtnEl.addEventListener('click', function () {
+		// simple restart: reload the page
+		window.location.reload();
+	});
+}
 
 // -- Start Menu: anime.js animations (entry, hover, click, title loop)
 function initMenuWithAnime() {
