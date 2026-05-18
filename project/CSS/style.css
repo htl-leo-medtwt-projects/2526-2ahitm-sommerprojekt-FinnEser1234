@@ -239,11 +239,18 @@ body.zoomFade {
     grid-row: 1;
 }
 
-#settingsPage {
+body#settingsPage {
     height: auto;
     overflow-y: auto;
     background: linear-gradient(180deg, var(--bg-1), var(--bg-0));
+    padding: 0;
+}
+
+#settingsContent {
+    min-height: 100vh;
+    width: 100%;
     padding: 80px 0 0;
+    box-sizing: border-box;
 }
 
 .settingsCard {
@@ -333,7 +340,7 @@ body.zoomFade {
 
 .saveRow {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1.4fr 0.8fr;
     width: 100%;
     background: linear-gradient(135deg, #15100c, #090807);
     color: var(--accent-soft);
@@ -405,9 +412,12 @@ body.zoomFade {
 }
 
 #backBtn {
-    width: 5%;
-    position: absolute;
-    left: 95%;
+    width: 42px;
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    filter: invert(1);
+    z-index: 20;
 }
 
 
@@ -682,7 +692,7 @@ body.modalOpen {
 
 .resultStats {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
     margin-top: 8px;
 }

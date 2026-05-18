@@ -73,8 +73,7 @@ let inventoryFoundList = document.getElementById("inventoryFoundList");
 let resultModal = document.getElementById('resultModal');
 let resultTitle = document.getElementById('resultTitle');
 let resultText = document.getElementById('resultText');
-let resultScoreText = document.getElementById('resultScoreText');
-let resultRewardText = document.getElementById('resultRewardText');
+let resultTimeText = document.getElementById('resultTimeText');
 let resultSuspectText = document.getElementById('resultSuspectText');
 let resultDetailText = document.getElementById('resultDetailText');
 let resultBadge = document.getElementById('resultBadge');
@@ -92,11 +91,9 @@ let cipherCurrentIndex = 0;
 let cipherSolved = false;
 let rooms = window.rooms || [];
 
-// Game state: score, timer, lives
-let score = 0;
-let timerSeconds = 300; // default 5 minutes
+// Game state: stopwatch and case flow
+let timerSeconds = 0;
 let timerInterval = null;
-let lives = 3;
 let finalAccuseMode = false;
 const guiltySuspect = "Elias Blackwood";
 
@@ -128,23 +125,15 @@ function formatTime(sec) {
 }
 
 function updateHUD() {
-	let scoreDisplay = document.getElementById('scoreDisplay');
 	let timerDisplay = document.getElementById('timerDisplay');
-	let livesDisplay = document.getElementById('livesDisplay');
-	if (scoreDisplay) scoreDisplay.textContent = 'Punkte: ' + score;
-	if (timerDisplay) timerDisplay.textContent = 'Zeit: ' + formatTime(timerSeconds);
-	if (livesDisplay) livesDisplay.textContent = 'Leben: ' + lives;
+	if (timerDisplay) timerDisplay.textContent = 'Stoppuhr: ' + formatTime(timerSeconds);
 }
 
 function startTimer() {
 	stopTimer();
 	timerInterval = setInterval(function () {
-		timerSeconds -= 1;
+		timerSeconds += 1;
 		updateHUD();
-		if (timerSeconds <= 0) {
-			stopTimer();
-			handleTimeOut();
-		}
 	}, 1000);
 }
 
@@ -156,17 +145,9 @@ function stopTimer() {
 }
 
 function addScore(amount) {
-	score += amount;
-	updateHUD();
 }
 
 function loseLife(amount) {
-	lives -= (amount || 1);
-	if (lives < 0) lives = 0;
-	updateHUD();
-	if (lives <= 0) {
-		handleGameOver(false, 'Du hast alle Leben verloren.');
-	}
 }
 
 function handleTimeOut() {
@@ -176,8 +157,7 @@ function handleTimeOut() {
 function handleGameOver(won, message) {
 	stopTimer();
 	finalAccuseMode = false;
-	let elapsedSeconds = Math.max(0, 300 - timerSeconds);
-	let rewardPoints = won ? Math.max(250, score + Math.max(100, Math.floor(elapsedSeconds / 2))) : Math.max(25, Math.floor(score * 0.35));
+	let elapsedSeconds = Math.max(0, timerSeconds);
 	let suspectText = selectedSuspect || 'Keine Spur gewählt';
 	if (resultModal) {
 		resultModal.classList.remove('resultModalWon', 'resultModalLost');
@@ -186,8 +166,7 @@ function handleGameOver(won, message) {
 	if (resultBadge) resultBadge.textContent = won ? 'Fall gelöst' : 'Ermittlung beendet';
 	if (resultTitle) resultTitle.textContent = won ? 'Du hast gewonnen!' : 'Fall gescheitert';
 	if (resultText) resultText.textContent = message || (won ? 'Du hast den wahren Täter gefunden.' : 'Leider falsch.');
-	if (resultScoreText) resultScoreText.textContent = 'Punkte: ' + score;
-	if (resultRewardText) resultRewardText.textContent = (won ? '+' : '+') + rewardPoints + ' Bonus';
+	if (resultTimeText) resultTimeText.textContent = formatTime(elapsedSeconds);
 	if (resultSuspectText) resultSuspectText.textContent = suspectText;
 	if (resultDetailText) resultDetailText.textContent = won ? 'Deine Arbeit wird in den Ermittlungsakten vermerkt. Die gesammelten Hinweise haben sich ausgezahlt.' : 'Die Akte bleibt offen. Ein klarer Abschluss fehlt noch, aber deine bisherigen Spuren bleiben gespeichert.';
 	if (resultModal) {
@@ -195,23 +174,14 @@ function handleGameOver(won, message) {
 		updateBodyModalState();
 	}
 
-	// save highscore
+	// save only elapsed stopwatch time
 	try {
-		let best = parseInt(localStorage.getItem('bestScore') || '0', 10);
-		if (score > best) {
-			localStorage.setItem('bestScore', String(score));
-		}
 		let runs = JSON.parse(localStorage.getItem('gameRuns') || '[]');
 		runs.push({
-			playerName: detectiveName || 'Unbekannt',
-			won: won,
-			score: score,
-			suspect: selectedSuspect || null,
-			elapsedSeconds: elapsedSeconds,
-			playedAt: Date.now()
+			name: detectiveName || 'Unbekannt',
+			elapsedSeconds: elapsedSeconds
 		});
 		localStorage.setItem('gameRuns', JSON.stringify(runs));
-		localStorage.setItem('lastResult', JSON.stringify({ won: won, score: score, suspect: selectedSuspect || null, elapsedSeconds: elapsedSeconds, time: Date.now() }));
 	} catch (e) { }
 }
 
@@ -245,8 +215,19 @@ function renderSavedRuns() {
 		runs = [];
 	}
 
-	runs = runs.filter(function (run) {
-		return run && typeof run.elapsedSeconds === 'number';
+	runs = runs.map(function (run) {
+		if (typeof run === 'number') {
+			return { name: 'Unbekannt', elapsedSeconds: run };
+		}
+		if (run && typeof run.elapsedSeconds === 'number') {
+			return {
+				name: run.name || run.playerName || 'Unbekannt',
+				elapsedSeconds: run.elapsedSeconds
+			};
+		}
+		return null;
+	}).filter(function (run) {
+		return run && typeof run.elapsedSeconds === 'number' && !isNaN(run.elapsedSeconds);
 	}).sort(function (a, b) {
 		return a.elapsedSeconds - b.elapsedSeconds;
 	});
@@ -266,20 +247,15 @@ function renderSavedRuns() {
 		row.className = 'saveRow' + (index === 0 ? ' active' : '');
 
 		let timeText = formatElapsedSeconds(run.elapsedSeconds);
-		let statusText = run.won ? 'Gewonnen' : 'Verloren';
 
 		let nameSpan = document.createElement('span');
-		nameSpan.textContent = run.playerName || 'Unbekannt';
+		nameSpan.textContent = run.name || 'Unbekannt';
 
 		let timeSpan = document.createElement('span');
 		timeSpan.textContent = timeText;
 
-		let statusSpan = document.createElement('span');
-		statusSpan.textContent = statusText + ' · ' + (run.score || 0) + ' Punkte';
-
 		row.appendChild(nameSpan);
 		row.appendChild(timeSpan);
-		row.appendChild(statusSpan);
 		savesTable.appendChild(row);
 	});
 }
@@ -399,10 +375,8 @@ function startFirstRoom() {
 	} catch (e) { }
 	updateBodyModalState();
 
-	// initialize game state (score, timer, lives)
-	score = 0;
-	timerSeconds = 300;
-	lives = 3;
+	// initialize game stopwatch
+	timerSeconds = 0;
 	updateHUD();
 	startTimer();
 }
