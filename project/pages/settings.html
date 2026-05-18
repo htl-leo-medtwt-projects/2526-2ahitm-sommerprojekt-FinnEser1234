@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Einstellungen</title>
     <link rel="stylesheet" href="../CSS/style.css">
+    <script src="../JS/script.js" defer></script>
 </head>
-<body>
+<body id="settingsPage">
 
     <a href="../index.html"><img src="../IMG/x.png" alt="Zurück-Button" id="backBtn"></a>
     <section id="settingsPage">
@@ -60,42 +61,8 @@
 
         <div class="settingsCard savesCard">
             <h2>Speicherstände</h2>
-            <div class="savesTable" aria-label="Speicherstände">
-                <button class="saveRow active" type="button">
-                    <span>Spielstand1</span>
-                    <span>Name</span>
-                    <span>99%</span>
-                </button>
-                <button class="saveRow" type="button">
-                    <span>Spielstand1</span>
-                    <span>Name</span>
-                    <span>99%</span>
-                </button>
-                <button class="saveRow" type="button">
-                    <span>Spielstand1</span>
-                    <span>Name</span>
-                    <span>99%</span>
-                </button>
-                <button class="saveRow" type="button">
-                    <span>Spielstand1</span>
-                    <span>Name</span>
-                    <span>99%</span>
-                </button>
-                <button class="saveRow" type="button">
-                    <span>Spielstand1</span>
-                    <span>Name</span>
-                    <span>99%</span>
-                </button>
-                <button class="saveRow" type="button">
-                    <span>Spielstand1</span>
-                    <span>Name</span>
-                    <span>99%</span>
-                </button>
-                <button class="saveRow" type="button">
-                    <span>Spielstand1</span>
-                    <span>Name</span>
-                    <span>99%</span>
-                </button>
+            <p class="savesHint">Die schnellsten Abschlüsse stehen oben.</p>
+            <div class="savesTable" id="savesTable" aria-label="Speicherstände">
             </div>
         </div>
 

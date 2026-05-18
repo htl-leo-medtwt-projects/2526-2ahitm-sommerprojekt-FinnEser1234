@@ -70,11 +70,17 @@ let inventoryToggle = document.getElementById("inventoryToggle");
 let inventoryPanel = document.getElementById("inventoryPanel");
 let inventoryEmptyText = document.getElementById("inventoryEmptyText");
 let inventoryFoundList = document.getElementById("inventoryFoundList");
+let resultModal = document.getElementById('resultModal');
+let resultTitle = document.getElementById('resultTitle');
+let resultText = document.getElementById('resultText');
+let resultScoreText = document.getElementById('resultScoreText');
 
 let currentRoomIndex = 0;
 let foundItems = [];
 let selectedSuspect = null;
 let firstLevelTransitionShown = false;
+let detectiveName = "Unbekannt";
+let roomInteractionFlags = {};
 
 let cipherTarget = "BLACKWOOD";
 let cipherLetters = ["B", "A", "R", "L", "M", "Q", "A", "C", "K", "T", "W", "Y", "O", "O", "D", "N", "E", "S"];
@@ -89,6 +95,27 @@ let timerInterval = null;
 let lives = 3;
 let finalAccuseMode = false;
 const guiltySuspect = "Elias Blackwood";
+
+function roomInteractionKey(roomIndex, interactionKey) {
+	return roomIndex + ":" + interactionKey;
+}
+
+function markRoomInteraction(roomIndex, interactionKey) {
+	roomInteractionFlags[roomInteractionKey(roomIndex, interactionKey)] = true;
+	if (roomIndex === 0 && isRoomFullyExplored(0) && !firstLevelTransitionShown) {
+		firstLevelTransitionShown = true;
+		showTransitionStory();
+	}
+	checkAllLevelsCompleted();
+}
+
+function hasRoomInteraction(roomIndex, interactionKey) {
+	return !!roomInteractionFlags[roomInteractionKey(roomIndex, interactionKey)];
+}
+
+function roomZeroFullyExplored() {
+	return hasRoomInteraction(0, "pinboard") && hasRoomInteraction(0, "letter") && hasRoomInteraction(0, "encryption") && hasRoomInteraction(0, "window");
+}
 
 function formatTime(sec) {
 	let m = Math.floor(sec / 60);
@@ -145,10 +172,7 @@ function handleTimeOut() {
 function handleGameOver(won, message) {
 	stopTimer();
 	finalAccuseMode = false;
-	let resultModal = document.getElementById('resultModal');
-	let resultTitle = document.getElementById('resultTitle');
-	let resultText = document.getElementById('resultText');
-	let resultScoreText = document.getElementById('resultScoreText');
+	let elapsedSeconds = Math.max(0, 300 - timerSeconds);
 	if (resultTitle) resultTitle.textContent = won ? 'Du hast gewonnen!' : 'Fall gescheitert';
 	if (resultText) resultText.textContent = message || (won ? 'Du hast den wahren Täter gefunden.' : 'Leider falsch.');
 	if (resultScoreText) resultScoreText.textContent = 'Punkte: ' + score;
@@ -163,19 +187,93 @@ function handleGameOver(won, message) {
 		if (score > best) {
 			localStorage.setItem('bestScore', String(score));
 		}
-		localStorage.setItem('lastResult', JSON.stringify({ won: won, score: score, suspect: selectedSuspect || null, time: Date.now() }));
+		let runs = JSON.parse(localStorage.getItem('gameRuns') || '[]');
+		runs.push({
+			playerName: detectiveName || 'Unbekannt',
+			won: won,
+			score: score,
+			suspect: selectedSuspect || null,
+			elapsedSeconds: elapsedSeconds,
+			playedAt: Date.now()
+		});
+		localStorage.setItem('gameRuns', JSON.stringify(runs));
+		localStorage.setItem('lastResult', JSON.stringify({ won: won, score: score, suspect: selectedSuspect || null, elapsedSeconds: elapsedSeconds, time: Date.now() }));
 	} catch (e) { }
 }
 
 function checkAllLevelsCompleted() {
 	if (!Array.isArray(rooms) || rooms.length === 0) return false;
 	let allFound = rooms.every(function (r) { return !!r.found; });
-	if (allFound) {
+	if (allFound && roomZeroFullyExplored()) {
 		// prompt final accusation
 		finalAccuseMode = true;
 		openSuspectsModal();
 	}
 	return allFound;
+}
+
+function formatElapsedSeconds(totalSeconds) {
+	let minutes = Math.floor(totalSeconds / 60);
+	let seconds = totalSeconds % 60;
+	return (minutes < 10 ? '0' + minutes : String(minutes)) + ':' + (seconds < 10 ? '0' + seconds : String(seconds));
+}
+
+function renderSavedRuns() {
+	let savesTable = document.getElementById('savesTable');
+	if (!savesTable) {
+		return;
+	}
+
+	let runs = [];
+	try {
+		runs = JSON.parse(localStorage.getItem('gameRuns') || '[]');
+	} catch (e) {
+		runs = [];
+	}
+
+	runs = runs.filter(function (run) {
+		return run && typeof run.elapsedSeconds === 'number';
+	}).sort(function (a, b) {
+		return a.elapsedSeconds - b.elapsedSeconds;
+	});
+
+	savesTable.innerHTML = '';
+
+	if (runs.length === 0) {
+		let empty = document.createElement('div');
+		empty.className = 'saveRowEmpty';
+		empty.textContent = 'Noch keine Speicherstände vorhanden.';
+		savesTable.appendChild(empty);
+		return;
+	}
+
+	runs.forEach(function (run, index) {
+		let row = document.createElement('div');
+		row.className = 'saveRow' + (index === 0 ? ' active' : '');
+
+		let timeText = formatElapsedSeconds(run.elapsedSeconds);
+		let statusText = run.won ? 'Gewonnen' : 'Verloren';
+
+		let nameSpan = document.createElement('span');
+		nameSpan.textContent = run.playerName || 'Unbekannt';
+
+		let timeSpan = document.createElement('span');
+		timeSpan.textContent = timeText;
+
+		let statusSpan = document.createElement('span');
+		statusSpan.textContent = statusText + ' · ' + (run.score || 0) + ' Punkte';
+
+		row.appendChild(nameSpan);
+		row.appendChild(timeSpan);
+		row.appendChild(statusSpan);
+		savesTable.appendChild(row);
+	});
+}
+
+function initSettingsPage() {
+	if (document.body && document.body.id === 'settingsPage') {
+		renderSavedRuns();
+	}
 }
 
 async function loadRoomsData() {
@@ -195,6 +293,23 @@ async function loadRoomsData() {
 		setupError.textContent = "Raumdaten konnten nicht geladen werden.";
 	}
 	return false;
+}
+
+function getRequiredRoomInteractions(roomIndex) {
+	if (roomIndex === 0) {
+		return ["pinboard", "letter", "encryption", "window"];
+	}
+	return [];
+}
+
+function isRoomFullyExplored(roomIndex) {
+	let requiredInteractions = getRequiredRoomInteractions(roomIndex);
+	if (requiredInteractions.length === 0) {
+		return true;
+	}
+	return requiredInteractions.every(function (interactionKey) {
+		return hasRoomInteraction(roomIndex, interactionKey);
+	});
 }
 
 function roomHasBothFinds(roomIndex) {
@@ -238,6 +353,9 @@ function updateBodyModalState() {
 	if (storyAfterFirstLevelModal && !storyAfterFirstLevelModal.classList.contains("gameModalHidden")) {
 		hasOpenModal = true;
 	}
+	if (resultModal && !resultModal.classList.contains("gameModalHidden")) {
+		hasOpenModal = true;
+	}
 
 	document.body.classList.toggle("modalOpen", hasOpenModal);
 }
@@ -254,6 +372,8 @@ function startFirstRoom() {
 	gameShell.classList.add("levelHidden");
 	levelOne.classList.remove("levelHidden");
 	currentRoomIndex = 0;
+	roomInteractionFlags = {};
+	firstLevelTransitionShown = false;
 	applyRoom();
 	renderInventory();
 	renderRoomsGrid();
@@ -279,6 +399,9 @@ function applyRoom() {
 	}
 
 	let room = rooms[currentRoomIndex];
+	if (currentRoomIndex > 1) {
+		room.found = true;
+	}
 	roomScene.style.backgroundImage = room.background;
 	roomSwitchBtn.textContent = "Raumstatus: " + room.name;
 
@@ -574,7 +697,7 @@ function addFoundItem(itemKey, title, sourceRoomIndex, shouldMarkRoomFound) {
 		rooms[sourceRoomIndex + 1].unlocked = true;
 	}
 
-	if (sourceRoomIndex === 0 && roomHasBothFinds(0) && !firstLevelTransitionShown) {
+	if (sourceRoomIndex === 0 && isRoomFullyExplored(0) && !firstLevelTransitionShown) {
 		firstLevelTransitionShown = true;
 		showTransitionStory();
 	}
@@ -718,6 +841,7 @@ if (gameSetupModal && gameSetupForm && detectiveNameInput && caseStartBtn && det
 		}
 
 		setupError.textContent = "";
+		detectiveName = playerName;
 		detectiveGreeting.textContent = "Willkommen, " + playerName + ". Dein Fall wartet.";
 		caseStartBtn.disabled = false;
 		gameSetupModal.classList.add("gameModalHidden");
@@ -784,6 +908,7 @@ if (pinboardFocusBtn) {
 			return;
 		}
 
+		markRoomInteraction(currentRoomIndex, 'pinboard');
 		pinboardOverlay.classList.remove("pinboardOverlayHidden");
 		addFoundItem("pinboard_" + currentRoomIndex, "Pinnwand untersucht", currentRoomIndex);
 		updateBodyModalState();
@@ -803,6 +928,7 @@ if (windowInspectBtn) {
 			return;
 		}
 
+		markRoomInteraction(0, 'window');
 		windowOverlay.classList.remove("windowOverlayHidden");
 		updateBodyModalState();
 	});
@@ -853,6 +979,7 @@ if (deskLetterBtn) {
 			return;
 		}
 
+		markRoomInteraction(currentRoomIndex, 'letter');
 		selectedSuspect = "Mara Voss";
 		updateSuspectSelectionUi();
 		showLetterText("Mara Voss wurde in Thorns Labor gesehen. Sie muss etwas mit dem Verschwinden zu tun haben.");
@@ -877,7 +1004,9 @@ if (suspectPickButtons.length > 0) {
 		button.addEventListener("click", function () {
 			var suspect = button.getAttribute("data-suspect");
 			chooseSuspect(suspect);
-			closeSuspectsModal();
+			if (!finalAccuseMode) {
+				closeSuspectsModal();
+			}
 		});
 	});
 }
@@ -890,6 +1019,7 @@ if (inventoryToggle && inventoryPanel) {
 
 if (encryptionMachineBtn) {
 	encryptionMachineBtn.addEventListener("click", function () {
+		markRoomInteraction(0, 'encryption');
 		showHint();
 	});
 }
@@ -952,6 +1082,12 @@ renderCipherGrid();
 
 // HUD initial update
 updateHUD();
+initSettingsPage();
+if (document.readyState !== 'loading') {
+	initSettingsPage();
+}
+window.addEventListener('DOMContentLoaded', initSettingsPage);
+window.addEventListener('pageshow', initSettingsPage);
 
 function finalizeAccusation() {
 	if (!selectedSuspect) {
