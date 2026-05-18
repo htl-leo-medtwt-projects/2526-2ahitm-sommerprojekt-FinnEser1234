@@ -74,6 +74,10 @@ let resultModal = document.getElementById('resultModal');
 let resultTitle = document.getElementById('resultTitle');
 let resultText = document.getElementById('resultText');
 let resultScoreText = document.getElementById('resultScoreText');
+let resultRewardText = document.getElementById('resultRewardText');
+let resultSuspectText = document.getElementById('resultSuspectText');
+let resultDetailText = document.getElementById('resultDetailText');
+let resultBadge = document.getElementById('resultBadge');
 
 let currentRoomIndex = 0;
 let foundItems = [];
@@ -129,7 +133,7 @@ function updateHUD() {
 	let livesDisplay = document.getElementById('livesDisplay');
 	if (scoreDisplay) scoreDisplay.textContent = 'Punkte: ' + score;
 	if (timerDisplay) timerDisplay.textContent = 'Zeit: ' + formatTime(timerSeconds);
-	if (livesDisplay) livesDisplay.textContent = 'Lives: ' + lives;
+	if (livesDisplay) livesDisplay.textContent = 'Leben: ' + lives;
 }
 
 function startTimer() {
@@ -161,7 +165,7 @@ function loseLife(amount) {
 	if (lives < 0) lives = 0;
 	updateHUD();
 	if (lives <= 0) {
-		handleGameOver(false, 'Du hast alle Lives verloren.');
+		handleGameOver(false, 'Du hast alle Leben verloren.');
 	}
 }
 
@@ -173,9 +177,19 @@ function handleGameOver(won, message) {
 	stopTimer();
 	finalAccuseMode = false;
 	let elapsedSeconds = Math.max(0, 300 - timerSeconds);
+	let rewardPoints = won ? Math.max(250, score + Math.max(100, Math.floor(elapsedSeconds / 2))) : Math.max(25, Math.floor(score * 0.35));
+	let suspectText = selectedSuspect || 'Keine Spur gewählt';
+	if (resultModal) {
+		resultModal.classList.remove('resultModalWon', 'resultModalLost');
+		resultModal.classList.add(won ? 'resultModalWon' : 'resultModalLost');
+	}
+	if (resultBadge) resultBadge.textContent = won ? 'Fall gelöst' : 'Ermittlung beendet';
 	if (resultTitle) resultTitle.textContent = won ? 'Du hast gewonnen!' : 'Fall gescheitert';
 	if (resultText) resultText.textContent = message || (won ? 'Du hast den wahren Täter gefunden.' : 'Leider falsch.');
 	if (resultScoreText) resultScoreText.textContent = 'Punkte: ' + score;
+	if (resultRewardText) resultRewardText.textContent = (won ? '+' : '+') + rewardPoints + ' Bonus';
+	if (resultSuspectText) resultSuspectText.textContent = suspectText;
+	if (resultDetailText) resultDetailText.textContent = won ? 'Deine Arbeit wird in den Ermittlungsakten vermerkt. Die gesammelten Hinweise haben sich ausgezahlt.' : 'Die Akte bleibt offen. Ein klarer Abschluss fehlt noch, aber deine bisherigen Spuren bleiben gespeichert.';
 	if (resultModal) {
 		resultModal.classList.remove('gameModalHidden');
 		updateBodyModalState();

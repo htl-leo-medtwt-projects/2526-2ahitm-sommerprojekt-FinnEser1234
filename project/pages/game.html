@@ -72,7 +72,7 @@
                 <div id="gameHud" class="gameHud">
                     <span id="scoreDisplay">Punkte: 0</span>
                     <span id="timerDisplay">Zeit: 05:00</span>
-                    <span id="livesDisplay">Lives: 3</span>
+                    <span id="livesDisplay">Leben: 3</span>
                     <button type="button" id="accuseBtn" class="caseStartButton">Beschuldigen</button>
                 </div>
             </div>
@@ -175,11 +175,31 @@
 
     <section id="resultModal" class="gameModal gameModalHidden" aria-modal="true" role="dialog" aria-label="Ergebnis">
         <div class="gameModalCard resultCard">
+            <p id="resultBadge" class="resultBadge">Ergebnis</p>
             <h2 id="resultTitle">Ergebnis</h2>
             <p id="resultText"></p>
-            <p id="resultScoreText"></p>
-            <button type="button" id="restartBtn" class="caseStartButton">Neustarten</button>
-            <a href="../index.html" class="caseStartButton">Zur Startseite</a>
+
+            <div class="resultStats" aria-label="Spielzusammenfassung">
+                <div class="resultStatItem">
+                    <span class="resultStatLabel">Punkte</span>
+                    <strong id="resultScoreText" class="resultStatValue"></strong>
+                </div>
+                <div class="resultStatItem">
+                    <span class="resultStatLabel">Belohnung</span>
+                    <strong id="resultRewardText" class="resultStatValue"></strong>
+                </div>
+                <div class="resultStatItem">
+                    <span class="resultStatLabel">Verdächtige Spur</span>
+                    <strong id="resultSuspectText" class="resultStatValue"></strong>
+                </div>
+            </div>
+
+            <p id="resultDetailText" class="resultDetailText"></p>
+
+            <div class="resultActions">
+                <button type="button" id="restartBtn" class="caseStartButton">Nochmal spielen</button>
+                <a href="../index.html" class="caseStartButton resultLinkButton">Zur Startseite</a>
+            </div>
         </div>
     </section>
 

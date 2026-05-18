@@ -3,6 +3,19 @@
     src: url('../FONT/Sherlock\ Vintage.ttf');
 }
 
+:root {
+    --bg-0: #050404;
+    --bg-1: #110b07;
+    --bg-2: #1a1208;
+    --panel: rgba(9, 7, 6, 0.96);
+    --accent: #c78639;
+    --accent-strong: #e3a04f;
+    --accent-soft: #f2d8b0;
+    --accent-deep: #7a4b18;
+    --text: #fff1de;
+    --muted: #e0bc87;
+}
+
 body {
     font-family: Sherlock;
     font-size: 2rem;
@@ -10,19 +23,25 @@ body {
     height: 100vh;
     margin: 0;
 
-    background: url('../IMG/Apartment.png');
+    background:
+        linear-gradient(180deg, rgba(5, 4, 4, 0.72), rgba(5, 4, 4, 0.86)),
+        url('../IMG/Apartment.png');
     background-size: cover;
     background-attachment: fixed;
+    color: var(--text);
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 #mainTitle {
     text-align: center;
-    color: black;
+    color: var(--text);
     margin: 0;
     position: absolute;
-    top: 10%;
-    left: 40%;
+    top: 15%;
+    left: 30%;
     transform: translateX(-50%);
+    width: auto;
     letter-spacing: 0.2em;
 }
 
@@ -32,13 +51,15 @@ body {
     justify-content: center;
     
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    min-height: 100vh;
 
     margin: 0;
 
-    color: white;
+    color: var(--text);
     position: relative;
-    background-color: #c7873976;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(10, 9, 8, 0.68), rgba(199, 135, 57, 0.18));
 }
 
 #scrollArrow {
@@ -86,16 +107,16 @@ body {
 
     width: auto;
     position: absolute;
-    right: 50%;
-    transform: translateX(500px);
-    margin-top: 25%;
+    left: 60%;
+    top: 65%;
+    transform: translateY(-50%);
 
     z-index: 100;
 }
 
 #btnGrid a {
     width: 300px;
-    background-color: black;
+    background: linear-gradient(135deg, var(--bg-0), var(--bg-2));
 
     padding: 2%;
     margin: 0;
@@ -104,23 +125,23 @@ body {
 
     border-radius: 5px;
     transition: all 0.2s linear;
-    color: #c78739;
-    border: 2px black solid;
+    color: var(--accent);
+    border: 2px solid var(--accent);
     text-decoration: none;
     display: block;
     box-sizing: border-box;
 }
 
 #btnGrid a:hover {
-    color: black;
-    background-color: #c7873976;
+    color: var(--bg-0);
+    background: linear-gradient(135deg, var(--accent-strong), var(--accent));
     cursor: pointer;
 }
 
 #storyLine {
     width: auto;
     min-height: 200vh;
-    background-color: #d0b08c;
+    background: linear-gradient(180deg, #160f09 0%, #0a0807 45%, #1d1209 100%);
 
     display: flex;
     justify-content: center;
@@ -142,7 +163,7 @@ body {
     width: 14px;
     height: calc(100% - 140px);
     transform: translateX(-50%);
-    background-color: #000;
+    background: linear-gradient(180deg, var(--accent-strong), var(--accent-deep));
 }
 
 .timelineRow {
@@ -157,7 +178,7 @@ body {
 
 .timelineText,
 .timelineDate {
-    color: #000;
+    color: var(--text);
     line-height: 1.2;
 }
 
@@ -221,14 +242,15 @@ body.zoomFade {
 #settingsPage {
     height: auto;
     overflow-y: auto;
-    background-color: #c78639;
+    background: linear-gradient(180deg, var(--bg-1), var(--bg-0));
     padding: 80px 0 0;
 }
 
 .settingsCard {
     width: min(980px, calc(100% - 80px));
     margin: 0 auto 80px;
-    background-color: #000;
+    background: linear-gradient(180deg, var(--panel) 0%, rgba(10, 8, 7, 0.98) 100%);
+    border: 1px solid rgba(199, 134, 57, 0.28);
     border-radius: 40px;
     padding: 44px 60px;
     box-sizing: border-box;
@@ -243,7 +265,7 @@ body.zoomFade {
 }
 
 .sliderGroup {
-    color: #fff;
+    color: var(--text);
     font-size: 1.8rem;
 }
 
@@ -258,12 +280,12 @@ body.zoomFade {
     grid-template-columns: 16px 1fr 16px;
     align-items: center;
     gap: 8px;
-    color: #fff;
+    color: var(--text);
 }
 
 .rangeRow input[type="range"] {
     width: 100%;
-    accent-color: #f0f0f0;
+    accent-color: var(--accent-strong);
 }
 
 .sliderWide {
@@ -275,13 +297,13 @@ body.zoomFade {
     grid-column: 2;
     display: flex;
     flex-direction: column;
-    border: 1px solid #000;
+    border: 1px solid var(--accent);
 }
 
 .languageButton {
-    background-color: #c9c9c9;
-    color: #000;
-    border: 1px solid #000;
+    background: linear-gradient(135deg, #1a1208, #090807);
+    color: var(--accent-soft);
+    border: 1px solid var(--accent);
     font-family: Sherlock;
     font-size: 2rem;
     padding: 6px 12px;
@@ -289,7 +311,8 @@ body.zoomFade {
 }
 
 .languageButton.active {
-    background-color: #a8d4a6;
+    background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+    color: var(--bg-0);
 }
 
 .savesCard {
@@ -299,32 +322,32 @@ body.zoomFade {
 .savesCard h2 {
     margin: 0 0 12px;
     text-align: center;
-    color: #fff;
+    color: var(--accent-strong);
     font-size: 3rem;
     letter-spacing: 0.04em;
 }
 
 .savesTable {
-    border: 1px solid #000;
+    border: 1px solid var(--accent-deep);
 }
 
 .saveRow {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     width: 100%;
-    background-color: #c9c9c9;
-    color: #000;
+    background: linear-gradient(135deg, #15100c, #090807);
+    color: var(--accent-soft);
     font-size: 2rem;
     padding: 4px 18px;
     border: none;
-    border-bottom: 1px solid #6d6d6d;
+    border-bottom: 1px solid rgba(199, 134, 57, 0.28);
     font-family: Sherlock;
     cursor: pointer;
 }
 
 .saveRow:hover {
     filter: brightness(0.95);
-    box-shadow: inset 0 0 0 2px rgba(255, 235, 199, 0.9), 0 0 0 2px rgba(0, 0, 0, 0.12);
+    box-shadow: inset 0 0 0 2px rgba(255, 235, 199, 0.22), 0 0 0 2px rgba(199, 134, 57, 0.18);
 }
 
 .saveRow span {
@@ -332,12 +355,13 @@ body.zoomFade {
 }
 
 .saveRow.active {
-    background-color: #a8d4a6;
+    background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+    color: var(--bg-0);
 }
 
 .savesHint {
     margin: 0 0 10px;
-    color: #fff;
+    color: var(--accent-soft);
     text-align: center;
     font-size: 1rem;
 }
@@ -346,14 +370,14 @@ body.zoomFade {
     display: block;
     padding: 10px 12px;
     text-align: center;
-    background: #c9c9c9;
-    color: #000;
+    background: linear-gradient(135deg, #15100c, #090807);
+    color: var(--accent-soft);
     font-size: 1.4rem;
 }
 
 #settingsFooter {
-    background-color: #000;
-    color: #c78639;
+    background: linear-gradient(135deg, var(--bg-0), var(--bg-2));
+    color: var(--accent);
     display: grid;
     grid-template-columns: 1fr 1.4fr;
     gap: 80px;
@@ -416,7 +440,7 @@ body.rulesCompactPage {
     margin: 0;
     padding: 28px 34px;
     border-radius: 24px;
-    color: #fff;
+    color: var(--text);
 }
 
 .rulesBack {
@@ -433,7 +457,7 @@ body.rulesCompactPage {
 
 .rulesCardCompact h1 {
     margin: 0 0 8px;
-    color: #c78639;
+    color: var(--accent-strong);
     font-size: 2.6rem;
     letter-spacing: 0.03em;
 }
@@ -441,13 +465,13 @@ body.rulesCompactPage {
 .rulesSmallCopy {
     margin: 0 0 16px;
     font-size: 1.2rem;
-    color: #f2d8b0;
+    color: var(--accent-soft);
 }
 
 .rulesCardCompact ul {
     margin: 0;
     padding-left: 24px;
-    color: #fff;
+    color: var(--text);
     font-size: 1.35rem;
     line-height: 1.35;
 }
@@ -486,8 +510,8 @@ body.modalOpen {
     width: 860px;
     max-width: 100%;
     margin: 0;
-    background-color: rgba(0, 0, 0, 0.9);
-    color: #fff;
+    background: linear-gradient(180deg, rgba(10, 8, 7, 0.95), rgba(27, 18, 9, 0.96));
+    color: var(--text);
     border-radius: 30px;
     padding: 36px;
     box-sizing: border-box;
@@ -500,7 +524,7 @@ body.modalOpen {
 
 .gameShell h1 {
     margin: 0;
-    color: #c78639;
+    color: var(--accent-strong);
     font-size: 3rem;
 }
 
@@ -510,9 +534,9 @@ body.modalOpen {
 }
 
 .caseStartButton {
-    background-color: #c78639;
-    color: #000;
-    border: 2px solid #c78639;
+    background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+    color: var(--bg-0);
+    border: 2px solid var(--accent-strong);
     border-radius: 8px;
     font-family: Sherlock;
     font-size: 1.4rem;
@@ -528,7 +552,7 @@ body.modalOpen {
 .gameModal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -544,8 +568,8 @@ body.modalOpen {
 .gameModalCard {
     width: 520px;
     max-width: 100%;
-    background-color: #000;
-    color: #fff;
+    background: linear-gradient(180deg, var(--panel) 0%, rgba(10, 8, 7, 0.98) 100%);
+    color: var(--text);
     border-radius: 22px;
     padding: 24px;
     box-sizing: border-box;
@@ -555,7 +579,7 @@ body.modalOpen {
 
 .gameModalCard h2 {
     margin: 0;
-    color: #c78639;
+    color: var(--accent-strong);
     font-size: 2.2rem;
 }
 
@@ -566,22 +590,179 @@ body.modalOpen {
 
 .gameModalCard label {
     font-size: 1.2rem;
-    color: #f2d8b0;
+    color: var(--accent-soft);
 }
 
 .gameModalCard input {
     font-family: Sherlock;
     font-size: 1.25rem;
-    border: 2px solid #c78639;
+    border: 2px solid var(--accent);
     border-radius: 6px;
     padding: 8px 10px;
-    background: #101010;
-    color: #fff;
+    background: #0f0c0a;
+    color: var(--text);
+}
+
+.gameModalCard.resultCard {
+    width: min(760px, 96vw);
+    padding: 30px 32px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(199, 134, 57, 0.26);
+    background:
+        radial-gradient(circle at top left, rgba(199, 134, 57, 0.22), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(90, 54, 18, 0.32), transparent 40%),
+        linear-gradient(180deg, #17120d 0%, #090807 100%);
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.6);
+    gap: 14px;
+}
+
+.gameModalCard.resultCard::before {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border-radius: 18px;
+    border: 1px solid rgba(199, 134, 57, 0.1);
+    pointer-events: none;
+}
+
+.resultBadge {
+    margin: 0;
+    align-self: start;
+    width: fit-content;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(199, 134, 57, 0.14);
+    border: 1px solid rgba(199, 134, 57, 0.3);
+    color: var(--accent-soft);
+    letter-spacing: 0.04em;
+    font-size: 0.92rem;
+}
+
+.resultModalWon .resultBadge {
+    background: linear-gradient(135deg, rgba(63, 38, 12, 0.95), rgba(24, 16, 8, 0.95));
+    border-color: rgba(227, 160, 79, 0.38);
+    color: #ffe9c8;
+}
+
+.resultModalLost .resultBadge {
+    background: linear-gradient(135deg, rgba(39, 24, 12, 0.96), rgba(10, 8, 7, 0.96));
+    border-color: rgba(199, 134, 57, 0.24);
+    color: #f3d7b3;
+}
+
+.gameModalCard.resultCard h2 {
+    font-size: clamp(2.2rem, 4vw, 3.35rem);
+    line-height: 0.95;
+    margin-top: 4px;
+}
+
+.resultModalWon .gameModalCard.resultCard h2 {
+    color: var(--accent-strong);
+    text-shadow: 0 0 16px rgba(227, 160, 79, 0.18);
+}
+
+.resultModalLost .gameModalCard.resultCard h2 {
+    color: var(--accent-soft);
+    text-shadow: 0 0 16px rgba(199, 134, 57, 0.14);
+}
+
+.resultStats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.resultStatItem {
+    padding: 14px 14px 15px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(199, 134, 57, 0.14);
+    display: grid;
+    gap: 6px;
+}
+
+.resultStatLabel {
+    color: var(--accent-soft);
+    letter-spacing: 0.02em;
+    font-size: 0.8rem;
+}
+
+.resultStatValue {
+    font-size: 1.35rem;
+    color: var(--text);
+}
+
+.resultDetailText {
+    margin-top: 2px;
+    color: var(--accent-soft);
+    max-width: 58ch;
+}
+
+.resultActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.resultActions .caseStartButton,
+.resultActions .resultLinkButton {
+    min-width: 180px;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.resultModalWon .resultActions .caseStartButton {
+    background: linear-gradient(135deg, var(--accent-strong), var(--accent-deep));
+    border-color: var(--accent-soft);
+    color: var(--bg-0);
+}
+
+.resultModalWon .resultActions .caseStartButton:hover {
+    filter: brightness(1.08);
+}
+
+.resultModalLost .resultActions .caseStartButton {
+    background: linear-gradient(135deg, #2a1a10, #0c0a08);
+    border-color: var(--accent);
+    color: var(--accent-soft);
+}
+
+.resultModalLost .resultActions .caseStartButton:hover {
+    filter: brightness(1.06);
+}
+
+.resultModalWon .gameModalCard.resultCard::after,
+.resultModalLost .gameModalCard.resultCard::after {
+    content: '';
+    position: absolute;
+    inset: auto -18% -40% auto;
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.22;
+    filter: blur(2px);
+}
+
+.resultModalWon .gameModalCard.resultCard::after {
+    background: radial-gradient(circle, rgba(227, 160, 79, 0.84), rgba(227, 160, 79, 0) 64%);
+}
+
+.resultModalLost .gameModalCard.resultCard::after {
+    background: radial-gradient(circle, rgba(120, 76, 30, 0.82), rgba(120, 76, 30, 0) 64%);
+}
+
+.resultLinkButton {
+    display: inline-flex;
+    align-items: center;
 }
 
 .setupErrorText {
     min-height: 1.2rem;
-    color: #f08f8f;
+    color: #ffb26b;
 }
 
 .storyIntroCard {
@@ -591,13 +772,13 @@ body.modalOpen {
 
 .storyHintTitle {
     margin-top: 6px;
-    color: #f2d8b0;
+    color: var(--accent-soft);
 }
 
 .storyHintList {
     margin: 0;
     padding-left: 24px;
-    color: #fff;
+    color: var(--text);
     font-size: 1.15rem;
     line-height: 1.25;
 }
@@ -643,9 +824,9 @@ body.modalOpen {
 }
 
 .roomSwitchBtn {
-    background-color: rgba(0, 0, 0, 0.84);
-    color: #f1d2a1;
-    border: 2px solid #c78639;
+    background: linear-gradient(135deg, rgba(10, 9, 8, 0.92), rgba(36, 24, 14, 0.96));
+    color: var(--accent-soft);
+    border: 2px solid var(--accent);
     border-radius: 8px;
     font-family: Sherlock;
     font-size: 1.2rem;
@@ -668,11 +849,11 @@ body.modalOpen {
 }
 
 .roomGridItem {
-    border: 2px solid #73532f;
+    border: 2px solid var(--accent-deep);
     border-radius: 10px;
     padding: 10px;
-    background: #14110c;
-    color: #e7cda5;
+    background: linear-gradient(180deg, #15100c, #090807);
+    color: var(--accent-soft);
     min-height: 92px;
 }
 
@@ -689,12 +870,12 @@ body.modalOpen {
 }
 
 .roomGridFound {
-    border-color: #3f9d63;
-    background: #0f1f16;
+    border-color: var(--accent-strong);
+    background: linear-gradient(180deg, rgba(46, 28, 12, 0.96), rgba(10, 8, 7, 1));
 }
 
 .roomGridCurrent {
-    box-shadow: 0 0 0 2px #d4a466 inset;
+    box-shadow: 0 0 0 2px var(--accent-strong) inset;
 }
 
 .roomGridTitle {
@@ -705,12 +886,12 @@ body.modalOpen {
 .roomGridState {
     margin: 0;
     font-size: 1rem;
-    color: #c6ad86;
+    color: var(--muted);
 }
 
 .pinboardFocusBtn {
     position: absolute;
-    border: 2px solid rgba(255, 227, 186, 0.7);
+    border: 2px solid rgba(227, 160, 79, 0.7);
     border-radius: 0;
     background: rgba(30, 21, 12, 0.28);
     color: rgba(255, 241, 220, 0.9);
@@ -736,7 +917,7 @@ body.modalOpen {
 
 .deskLetterBtn {
     position: absolute;
-    border: 2px solid rgba(255, 227, 186, 0.7);
+    border: 2px solid rgba(227, 160, 79, 0.7);
     border-radius: 0;
     background: rgba(30, 21, 12, 0.28);
     color: rgba(255, 241, 220, 0.9);
@@ -749,7 +930,7 @@ body.modalOpen {
 
 .encryptionMachineBtn {
     position: absolute;
-    border: 2px solid rgba(255, 227, 186, 0.7);
+    border: 2px solid rgba(227, 160, 79, 0.7);
     border-radius: 0;
     background: rgba(30, 21, 12, 0.28);
     color: rgba(255, 241, 220, 0.9);
@@ -762,7 +943,7 @@ body.modalOpen {
 
 .windowInspectBtn {
     position: absolute;
-    border: 2px solid rgba(255, 227, 186, 0.7);
+    border: 2px solid rgba(227, 160, 79, 0.7);
     border-radius: 0;
     background: rgba(30, 21, 12, 0.28);
     color: rgba(255, 241, 220, 0.9);
@@ -964,7 +1145,7 @@ body.modalOpen {
 .suspectsHint {
     margin: 0;
     font-size: 0.95rem;
-    color: #d1ba93;
+    color: var(--accent-soft);
 }
 
 .suspectsGrid {
@@ -979,9 +1160,9 @@ body.modalOpen {
 }
 
 .suspectSelected {
-    background-color: #1b5f36;
-    border-color: #2d9a5b;
-    color: #f0f8f2;
+    background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+    border-color: var(--accent-soft);
+    color: var(--bg-0);
 }
 
 .letterNoteCard {
@@ -991,10 +1172,10 @@ body.modalOpen {
     left: 50%;
     transform: translateX(-50%);
     width: min(92vw, 640px);
-    background: #f3ead6;
-    border: 3px solid #a37542;
+    background: linear-gradient(180deg, #1b1209, #0b0908);
+    border: 3px solid var(--accent);
     border-radius: 16px;
-    color: #2f2318;
+    color: var(--text);
     padding: 18px 20px;
     box-sizing: border-box;
 }
@@ -1002,7 +1183,7 @@ body.modalOpen {
 .letterNoteCard h2 {
     margin: 0 0 8px;
     font-size: 2rem;
-    color: #5c3d20;
+    color: var(--accent-strong);
 }
 
 .letterNoteCard p {
@@ -1026,7 +1207,7 @@ body.modalOpen {
 
 .cipherFeedback {
     font-size: 1rem;
-    color: #55381d;
+    color: var(--accent-soft);
 }
 
 .cipherGrid {
@@ -1037,9 +1218,9 @@ body.modalOpen {
 }
 
 .cipherLetterBtn {
-    border: 2px solid #8d6030;
-    background: #fff7e8;
-    color: #3a2817;
+    border: 2px solid var(--accent);
+    background: linear-gradient(180deg, #1c120a, #0f0c0a);
+    color: var(--accent-soft);
     border-radius: 10px;
     min-height: 56px;
     font-family: Sherlock;
@@ -1102,8 +1283,8 @@ body.modalOpen {
     bottom: 120px;
     z-index: 55;
     width: min(92vw, 340px);
-    background: rgba(8, 8, 8, 0.94);
-    border: 2px solid #bc8a4d;
+    background: linear-gradient(180deg, rgba(10, 8, 7, 0.96), rgba(24, 15, 9, 0.98));
+    border: 2px solid var(--accent);
     border-radius: 14px;
     padding: 14px;
     box-sizing: border-box;
@@ -1115,14 +1296,14 @@ body.modalOpen {
 
 .inventoryPanel h2 {
     margin: 0 0 10px;
-    color: #efcf9f;
+    color: var(--accent-strong);
     font-size: 2rem;
 }
 
 .inventoryEmptyText {
     margin: 0;
     font-size: 1.05rem;
-    color: #d1ba93;
+    color: var(--accent-soft);
 }
 
 .inventoryFoundList {
@@ -1131,10 +1312,10 @@ body.modalOpen {
 }
 
 .inventoryFoundItem {
-    border: 1px solid #6f5738;
+    border: 1px solid var(--accent-deep);
     border-radius: 8px;
     padding: 8px;
-    color: #f4dbb8;
-    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    background: rgba(199, 134, 57, 0.08);
     font-size: 1rem;
 }
