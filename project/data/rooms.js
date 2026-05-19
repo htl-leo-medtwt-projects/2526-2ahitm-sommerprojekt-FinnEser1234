@@ -31,7 +31,7 @@ window.rooms = [
     "pinboard": { "top": "10%", "left": "10%", "width": "22%", "height": "30%" },
     "letter": { "top": "69%", "left": "58%", "width": "94px", "height": "72px" },
     "encryption": { "top": "35%", "left": "82%", "width": "15%", "height": "20%" },
-    "finalClue": { "top": "26%", "left": "52%", "width": "22%", "height": "26%" }
+    "finalClue": { "top": "63%", "left": "23%", "width": "10%", "height": "8%" }
   },
   {
     "name": "Voss Apartment",
@@ -41,6 +41,6 @@ window.rooms = [
     "pinboard": { "top": "10%", "left": "10%", "width": "22%", "height": "30%" },
     "letter": { "top": "69%", "left": "58%", "width": "94px", "height": "72px" },
     "encryption": { "top": "35%", "left": "82%", "width": "15%", "height": "20%" },
-    "finalClue": { "top": "20%", "left": "16%", "width": "20%", "height": "24%" }
+    "finalClue": { "top": "45%", "left": "12%", "width": "7%", "height": "6%" }
   }
 ];
