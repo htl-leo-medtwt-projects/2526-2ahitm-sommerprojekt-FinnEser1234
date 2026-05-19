@@ -26,7 +26,7 @@ window.rooms = [
   {
     "name": "Blackwood Apartment",
     "background": "url('../IMG/ApartmentBlackwood.png')",
-    "unlocked": true,
+    "unlocked": false,
     "found": false,
     "pinboard": { "top": "10%", "left": "10%", "width": "22%", "height": "30%" },
     "letter": { "top": "69%", "left": "58%", "width": "94px", "height": "72px" },
@@ -36,7 +36,7 @@ window.rooms = [
   {
     "name": "Voss Apartment",
     "background": "url('../IMG/ApartmentVoss.png')",
-    "unlocked": true,
+    "unlocked": false,
     "found": false,
     "pinboard": { "top": "10%", "left": "10%", "width": "22%", "height": "30%" },
     "letter": { "top": "69%", "left": "58%", "width": "94px", "height": "72px" },

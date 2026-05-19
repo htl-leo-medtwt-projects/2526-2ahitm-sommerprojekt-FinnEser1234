@@ -1088,6 +1088,12 @@ body.modalOpen {
     outline: none;
     z-index: 6;
 }
+.finalClueBtn:hover,
+.finalClueBtn:focus-visible {
+    opacity: 0;
+    box-shadow: none;
+    background: rgba(60, 28, 16, 0.22);
+}
 .pinboardOverlayHidden {
     display: none;
 }

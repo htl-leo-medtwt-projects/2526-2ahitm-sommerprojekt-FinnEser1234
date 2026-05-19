@@ -89,6 +89,7 @@ let selectedSuspect = null;
 let firstLevelTransitionShown = false;
 let detectiveName = "Unbekannt";
 let roomInteractionFlags = {};
+let vossRevealShown = false;
 
 let cipherTarget = "BLACKWOOD";
 let cipherLetters = ["B", "A", "R", "L", "M", "Q", "A", "C", "K", "T", "W", "Y", "O", "O", "D", "N", "E", "S"];
@@ -369,9 +370,10 @@ function startFirstRoom() {
 
 	gameShell.classList.add("levelHidden");
 	levelOne.classList.remove("levelHidden");
-	currentRoomIndex = rooms.length > 0 ? rooms.length - 1 : 0;
+	currentRoomIndex = 0;
 	roomInteractionFlags = {};
 	firstLevelTransitionShown = false;
+	vossRevealShown = false;
 	applyRoom();
 	renderInventory();
 	renderRoomsGrid();
@@ -468,7 +470,7 @@ function applyRoom() {
 			setHotspot(finalClueBtn, room.finalClue);
 			finalClueBtn.style.display = "block";
 			finalClueBtn.style.pointerEvents = "auto";
-			finalClueBtn.style.opacity = "0.42";
+			finalClueBtn.style.opacity = "0";
 		} else {
 			finalClueBtn.style.display = "none";
 			finalClueBtn.style.pointerEvents = "none";
@@ -541,18 +543,25 @@ function showFinalReveal() {
 
 	let room = rooms[currentRoomIndex];
 	let revealText = "Die letzte Spur ist eindeutig: Elias Blackwood hat den Fall inszeniert.";
+	let accuseLabel = "Blackwood beschuldigen";
 	if (room && room.name) {
 		if (currentRoomIndex === 2) {
 			revealText = "Im Blackwood Apartment liegt der Beweis offen vor dir. Alles führt zu Elias Blackwood.";
+			selectedSuspect = guiltySuspect;
+			accuseLabel = "Blackwood beschuldigen";
 		} else if (currentRoomIndex === 3) {
-			revealText = "Voss' Raum bestätigt die Täuschung. Der Täter ist Elias Blackwood.";
+			revealText = "Voss' Raum zeigt dir die Täuschung: eigentlich führt alles zu Elias Blackwood, aber deine Spur bleibt bei Mara Voss. Du kannst nur sie festnehmen.";
+			selectedSuspect = "Mara Voss";
+			accuseLabel = "Mara Voss festnehmen";
 		}
 	}
 
-	selectedSuspect = guiltySuspect;
 	updateSuspectSelectionUi();
 	finalAccuseMode = true;
 	finalRevealText.textContent = revealText;
+	if (finalRevealAccuseBtn) {
+		finalRevealAccuseBtn.textContent = accuseLabel;
+	}
 	finalRevealCard.classList.remove("letterNoteHidden");
 	updateBodyModalState();
 }
@@ -1077,10 +1086,14 @@ if (finalClueBtn) {
 
 if (finalRevealAccuseBtn) {
 	finalRevealAccuseBtn.addEventListener("click", function () {
-		selectedSuspect = guiltySuspect;
+		if (currentRoomIndex === 3) {
+			selectedSuspect = "Mara Voss";
+		} else {
+			selectedSuspect = guiltySuspect;
+		}
 		updateSuspectSelectionUi();
 		closeFinalRevealCard();
-		openSuspectsModal();
+		finalizeAccusation();
 	});
 }
 
@@ -1099,28 +1112,7 @@ if (resetCipher) {
 if (mapVossBtn) {
 	mapVossBtn.addEventListener("click", function () {
 		closeMapText();
-		// Upper box: navigate to Blackwood's apartment (per user request)
-		chooseSuspect("Elias Blackwood");
-		var blackIndex = rooms.findIndex(function (r) { return r.name && r.name.toLowerCase().includes('blackwood'); });
-		if (blackIndex === -1) {
-			if (suspectsModal) {
-				suspectsModal.classList.remove('gameModalHidden');
-				updateBodyModalState();
-			}
-			return;
-		}
-		currentRoomIndex = blackIndex;
-		applyRoom();
-		renderInventory();
-		renderRoomsGrid();
-		updateBodyModalState();
-	});
-}
-
-if (mapBlackwoodBtn) {
-	mapBlackwoodBtn.addEventListener("click", function () {
-		closeMapText();
-		// Lower box: navigate to Voss's apartment (per user request)
+		// Upper box: navigate to Voss' apartment
 		chooseSuspect("Mara Voss");
 		var vossIndex = rooms.findIndex(function (r) { return r.name && r.name.toLowerCase().includes('voss'); });
 		if (vossIndex === -1) {
@@ -1131,6 +1123,27 @@ if (mapBlackwoodBtn) {
 			return;
 		}
 		currentRoomIndex = vossIndex;
+		applyRoom();
+		renderInventory();
+		renderRoomsGrid();
+		updateBodyModalState();
+	});
+}
+
+if (mapBlackwoodBtn) {
+	mapBlackwoodBtn.addEventListener("click", function () {
+		closeMapText();
+		// Lower box: navigate to Blackwood's apartment
+		chooseSuspect("Elias Blackwood");
+		var blackIndex = rooms.findIndex(function (r) { return r.name && r.name.toLowerCase().includes('blackwood'); });
+		if (blackIndex === -1) {
+			if (suspectsModal) {
+				suspectsModal.classList.remove('gameModalHidden');
+				updateBodyModalState();
+			}
+			return;
+		}
+		currentRoomIndex = blackIndex;
 		applyRoom();
 		renderInventory();
 		renderRoomsGrid();
