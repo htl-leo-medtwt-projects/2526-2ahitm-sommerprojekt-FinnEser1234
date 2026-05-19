@@ -998,30 +998,29 @@ body.modalOpen {
 
 .mapPieceBtn {
     position: absolute;
-    border: 2px solid rgba(255, 227, 186, 0.72);
+    border: none;
     border-radius: 14px;
-    background: rgba(30, 21, 12, 0.38);
-    color: rgba(255, 241, 220, 0.88);
+    background: transparent url('../IMG/Kartenteil.png') center/contain no-repeat;
+    color: transparent;
     font-family: Sherlock;
-    font-size: 1.4rem;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+    font-size: 0;
     display: none;
     cursor: pointer;
     outline: none;
     z-index: 5;
     opacity: 0;
-    transition: opacity 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18) inset, 0 8px 22px rgba(0, 0, 0, 0.18);
+    transition: opacity 0.3s ease;
+    box-shadow: none;
 }
 
 .mapPieceBoxVisible {
-    background: rgba(52, 36, 18, 0.42);
+    background: transparent url('../IMG/Kartenteil.png') center/contain no-repeat;
 }
 
 .mapPieceBtn:hover {
     opacity: 1;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18) inset, 0 0 25px rgba(255, 215, 0, 0.7), 0 8px 22px rgba(0, 0, 0, 0.18);
-    filter: brightness(1.08);
+    box-shadow: none;
+    filter: none;
 }
 
 .mapTraceBtn:hover,
