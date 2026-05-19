@@ -29,6 +29,7 @@ let showSuspectsBtn = document.getElementById("showSuspectsBtn");
 let pinboardFocusBtn = document.getElementById("pinboardFocusBtn");
 let deskLetterBtn = document.getElementById("deskLetterBtn");
 let windowInspectBtn = document.getElementById("windowInspectBtn");
+let finalClueBtn = document.getElementById("finalClueBtn");
 let mapPieceButtons = [
 	document.getElementById("mapPieceBtn1"),
 	document.getElementById("mapPieceBtn2"),
@@ -51,6 +52,10 @@ let closeLetterNote = document.getElementById("closeLetterNote");
 let hintCard = document.getElementById("hintCard");
 let hintText = document.getElementById("hintText");
 let closeHint = document.getElementById("closeHint");
+let finalRevealCard = document.getElementById("finalRevealCard");
+let finalRevealText = document.getElementById("finalRevealText");
+let finalRevealAccuseBtn = document.getElementById("finalRevealAccuseBtn");
+let closeFinalReveal = document.getElementById("closeFinalReveal");
 let cipherGrid = document.getElementById("cipherGrid");
 let cipherProgress = document.getElementById("cipherProgress");
 let cipherFeedback = document.getElementById("cipherFeedback");
@@ -343,6 +348,9 @@ function updateBodyModalState() {
 	if (storyAfterFirstLevelModal && !storyAfterFirstLevelModal.classList.contains("gameModalHidden")) {
 		hasOpenModal = true;
 	}
+	if (finalRevealCard && !finalRevealCard.classList.contains("letterNoteHidden")) {
+		hasOpenModal = true;
+	}
 	if (resultModal && !resultModal.classList.contains("gameModalHidden")) {
 		hasOpenModal = true;
 	}
@@ -361,7 +369,7 @@ function startFirstRoom() {
 
 	gameShell.classList.add("levelHidden");
 	levelOne.classList.remove("levelHidden");
-	currentRoomIndex = 0;
+	currentRoomIndex = rooms.length > 0 ? rooms.length - 1 : 0;
 	roomInteractionFlags = {};
 	firstLevelTransitionShown = false;
 	applyRoom();
@@ -454,6 +462,19 @@ function applyRoom() {
 			windowInspectBtn.style.pointerEvents = "none";
 		}
 	}
+
+	if (finalClueBtn) {
+		if (currentRoomIndex >= 2 && room.finalClue) {
+			setHotspot(finalClueBtn, room.finalClue);
+			finalClueBtn.style.display = "block";
+			finalClueBtn.style.pointerEvents = "auto";
+			finalClueBtn.style.opacity = "0.42";
+		} else {
+			finalClueBtn.style.display = "none";
+			finalClueBtn.style.pointerEvents = "none";
+			finalClueBtn.style.opacity = "0";
+		}
+	}
 }
 
 function hideTransitionStory() {
@@ -510,6 +531,36 @@ function showHint(text) {
 function closeHintText() {
 	if (hintCard) {
 		hintCard.classList.add("letterNoteHidden");
+	}
+}
+
+function showFinalReveal() {
+	if (!finalRevealCard || !finalRevealText) {
+		return;
+	}
+
+	let room = rooms[currentRoomIndex];
+	let revealText = "Die letzte Spur ist eindeutig: Elias Blackwood hat den Fall inszeniert.";
+	if (room && room.name) {
+		if (currentRoomIndex === 2) {
+			revealText = "Im Blackwood Apartment liegt der Beweis offen vor dir. Alles führt zu Elias Blackwood.";
+		} else if (currentRoomIndex === 3) {
+			revealText = "Voss' Raum bestätigt die Täuschung. Der Täter ist Elias Blackwood.";
+		}
+	}
+
+	selectedSuspect = guiltySuspect;
+	updateSuspectSelectionUi();
+	finalAccuseMode = true;
+	finalRevealText.textContent = revealText;
+	finalRevealCard.classList.remove("letterNoteHidden");
+	updateBodyModalState();
+}
+
+function closeFinalRevealCard() {
+	if (finalRevealCard) {
+		finalRevealCard.classList.add("letterNoteHidden");
+		updateBodyModalState();
 	}
 }
 
@@ -1018,6 +1069,27 @@ if (closeHint) {
 	});
 }
 
+if (finalClueBtn) {
+	finalClueBtn.addEventListener("click", function () {
+		showFinalReveal();
+	});
+}
+
+if (finalRevealAccuseBtn) {
+	finalRevealAccuseBtn.addEventListener("click", function () {
+		selectedSuspect = guiltySuspect;
+		updateSuspectSelectionUi();
+		closeFinalRevealCard();
+		openSuspectsModal();
+	});
+}
+
+if (closeFinalReveal) {
+	closeFinalReveal.addEventListener("click", function () {
+		closeFinalRevealCard();
+	});
+}
+
 if (resetCipher) {
 	resetCipher.addEventListener("click", function () {
 		resetCipherPuzzle("Neu gestartet. Suche einen Nachnamen unter den Verdaechtigen.");
@@ -1223,6 +1295,7 @@ function initGameButtonAnimations() {
 		'.suspectPickBtn',
 		'.pinboardCloseBtn',
 		'.mapTraceBtn',
+		'.finalClueBtn',
 		'.languageButton',
 		'.saveRow',
 		'.inventoryToggle'

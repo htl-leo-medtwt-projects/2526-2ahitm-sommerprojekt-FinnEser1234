@@ -846,6 +846,25 @@ body.modalOpen {
     align-items: center;
 }
 
+@keyframes roomButtonGlow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(227, 160, 79, 0.25), 0 0 12px rgba(227, 160, 79, 0.18);
+        filter: brightness(1);
+    }
+    50% {
+        box-shadow: 0 0 0 2px rgba(255, 227, 186, 0.38), 0 0 22px rgba(227, 160, 79, 0.42);
+        filter: brightness(1.12);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(227, 160, 79, 0.25), 0 0 12px rgba(227, 160, 79, 0.18);
+        filter: brightness(1);
+    }
+}
+
+.roomControlBar > button {
+    animation: roomButtonGlow 1.9s ease-in-out infinite;
+}
+
 .roomSwitchBtn {
     background: linear-gradient(135deg, rgba(10, 9, 8, 0.92), rgba(36, 24, 14, 0.96));
     color: var(--accent-soft);
@@ -1036,6 +1055,13 @@ body.modalOpen {
     text-align: center;
 }
 
+.finalRevealCard {
+    width: min(620px, 92vw);
+    display: grid;
+    gap: 12px;
+    text-align: center;
+}
+
 .pinboardOverlay {
     position: fixed;
     inset: 0;
@@ -1048,6 +1074,20 @@ body.modalOpen {
     box-sizing: border-box;
 }
 
+.finalClueBtn {
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    border: 2px solid rgba(255, 214, 156, 0.82);
+    border-radius: 0;
+    background: rgba(60, 28, 16, 0.22);
+    color: rgba(255, 241, 220, 0.9);
+    font-size: 0;
+    cursor: default;
+    opacity: 0;
+    outline: none;
+    z-index: 6;
+}
 .pinboardOverlayHidden {
     display: none;
 }
@@ -1060,6 +1100,12 @@ body.modalOpen {
     align-items: center;
     justify-items: center;
     background: rgba(0, 0, 0, 0.92);
+.finalClueBtn:hover,
+.finalClueBtn:focus-visible {
+    opacity: 1;
+    box-shadow: 0 0 0 2px rgba(255, 241, 220, 0.55) inset, 0 0 0 2px rgba(255, 214, 156, 0.32), 0 0 22px rgba(255, 214, 156, 0.24);
+    background: rgba(76, 40, 18, 0.36);
+}
     padding: 20px;
     box-sizing: border-box;
 }

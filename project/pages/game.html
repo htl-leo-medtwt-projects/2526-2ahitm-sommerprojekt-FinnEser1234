@@ -91,6 +91,10 @@
                 Fenster ansehen
             </button>
 
+            <button type="button" id="finalClueBtn" class="finalClueBtn" aria-label="Letzten Hinweis untersuchen">
+                Letzter Hinweis
+            </button>
+
             <button type="button" id="mapPieceBtn1" class="mapPieceBtn" aria-label="Kartenteil 1 aufnehmen">1</button>
             <button type="button" id="mapPieceBtn2" class="mapPieceBtn" aria-label="Kartenteil 2 aufnehmen">2</button>
             <button type="button" id="mapPieceBtn3" class="mapPieceBtn" aria-label="Kartenteil 3 aufnehmen">3</button>
@@ -139,6 +143,15 @@
         <div class="cipherActions">
             <button type="button" id="resetCipher" class="caseStartButton">Zuruecksetzen</button>
             <button type="button" id="closeHint" class="caseStartButton">Schliessen</button>
+        </div>
+    </article>
+
+    <article id="finalRevealCard" class="letterNoteCard finalRevealCard letterNoteHidden" aria-live="polite">
+        <h2>Endgültiger Hinweis</h2>
+        <p id="finalRevealText"></p>
+        <div class="cipherActions">
+            <button type="button" id="finalRevealAccuseBtn" class="caseStartButton">Blackwood beschuldigen</button>
+            <button type="button" id="closeFinalReveal" class="caseStartButton">Schliessen</button>
         </div>
     </article>
 
