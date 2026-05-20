@@ -70,7 +70,7 @@
                     Verdächtige
                 </button>
                 <div id="gameHud" class="gameHud">
-                    <span id="timerDisplay">Stoppuhr: 00:00</span>
+                    <span id="timerDisplay">00:00</span>
                     <button type="button" id="accuseBtn" class="caseStartButton">Beschuldigen</button>
                 </div>
             </div>
@@ -121,6 +121,7 @@
         <button type="button" id="mapCloseBtn" class="pinboardCloseBtn" aria-label="Karte schließen">
             Zurück
         </button>
+        <div id="mapTooltip" class="mapTooltip"></div>
         <div class="mapContainer">
             <img src="../IMG/FullMap.png" alt="Karte mit den beiden Spuren" class="mapOverlayImage">
             <button type="button" id="mapVossBtn" class="mapTraceBtn mapVossBtn" aria-label="Spur von Voss" title="Spur: Voss"></button>
@@ -167,7 +168,7 @@
     <section id="suspectsModal" class="gameModal gameModalHidden" aria-modal="true" role="dialog" aria-label="Verdächtige auswählen">
         <div class="gameModalCard suspectsCard">
             <h2>Verdächtige</h2>
-            <p class="suspectsIntro">Waehle eine aktuelle Hauptspur aus.</p>
+            <p class="suspectsIntro">Wähle eine aktuelle Hauptspur aus.</p>
             <p class="suspectsHint">8 Personen stehen unter Verdacht. Die Maschine kann Hinweise liefern, aber auch in die Irre fuehren.</p>
             <div class="suspectsGrid">
                 <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Mara Voss">Mara Voss</button>
@@ -192,7 +193,6 @@
 
             <div class="resultStats" aria-label="Spielzusammenfassung">
                 <div class="resultStatItem">
-                    <span class="resultStatLabel">Stoppuhr</span>
                     <strong id="resultTimeText" class="resultStatValue"></strong>
                 </div>
                 <div class="resultStatItem">

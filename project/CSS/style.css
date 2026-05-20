@@ -43,6 +43,27 @@ body {
     transform: translateX(-50%);
     width: auto;
     letter-spacing: 0.2em;
+    animation: titleGlow 3s ease-in-out forwards;
+    font-size: 4rem;
+    font-weight: bold;
+}
+
+@keyframes titleGlow {
+    0% {
+        opacity: 0;
+        text-shadow: 0 0 10px rgba(199, 135, 57, 0),
+                     0 0 20px rgba(199, 135, 57, 0);
+    }
+    50% {
+        opacity: 1;
+        text-shadow: 0 0 20px rgba(199, 135, 57, 0.8),
+                     0 0 30px rgba(199, 135, 57, 0.6);
+    }
+    100% {
+        opacity: 1;
+        text-shadow: 0 0 15px rgba(199, 135, 57, 0.6),
+                     0 0 25px rgba(199, 135, 57, 0.3);
+    }
 }
 
 #mainBox {
@@ -1195,6 +1216,27 @@ body.modalOpen {
     height: 100px;
 }
 
+.mapTooltip {
+    position: fixed;
+    pointer-events: none;
+    background: rgba(199, 135, 57, 0.95);
+    color: #1a1208;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    white-space: nowrap;
+    z-index: 48;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    letter-spacing: 0.1em;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.mapTooltip.visible {
+    opacity: 1;
+}
+
 .pinboardSurface {
     width: min(95vw, 1250px);
     height: min(90vh, 860px);
@@ -1386,10 +1428,49 @@ body.modalOpen {
 }
 
 .inventoryFoundItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
     border: 1px solid var(--accent-deep);
     border-radius: 8px;
-    padding: 8px;
+    padding: 10px 10px 10px 12px;
     color: var(--text);
     background: rgba(199, 134, 57, 0.08);
     font-size: 1rem;
+}
+
+.inventoryFoundItemText {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+}
+
+.inventoryFoundItemText strong,
+.inventoryFoundItemText span {
+    line-height: 1.15;
+}
+
+.inventoryFoundItemText span {
+    color: var(--muted);
+    font-size: 0.88rem;
+}
+
+.inventoryItemUseBtn {
+    flex: 0 0 auto;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(199, 135, 57, 0.22), rgba(122, 75, 24, 0.35));
+    color: var(--text);
+    padding: 7px 12px;
+    font: inherit;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.inventoryItemUseBtn:hover {
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, rgba(227, 160, 79, 0.34), rgba(199, 135, 57, 0.42));
+    border-color: var(--accent-strong);
 }

@@ -720,6 +720,86 @@ function countMapPiecesFound() {
 	}).length;
 }
 
+function getInventoryItemType(itemKey) {
+	if (typeof itemKey !== "string") {
+		return "";
+	}
+
+	if (itemKey.indexOf("map_piece_") === 0) {
+		return "map_piece";
+	}
+	if (itemKey.indexOf("letter_") === 0) {
+		return "letter";
+	}
+	if (itemKey.indexOf("pinboard_") === 0) {
+		return "pinboard";
+	}
+
+	return "";
+}
+
+function getInventoryItemActionLabel(item) {
+	let itemType = item ? getInventoryItemType(item.key) : "";
+
+	if (itemType === "map_piece") {
+		return countMapPiecesFound() >= mapPieceButtons.filter(Boolean).length ? "Karte öffnen" : "Fundort ansehen";
+	}
+	if (itemType === "letter") {
+		return "Brief lesen";
+	}
+	if (itemType === "pinboard") {
+		return "Pinnwand öffnen";
+	}
+
+	return "Benutzen";
+}
+
+function focusInventorySourceRoom(item) {
+	if (!item || typeof item.sourceRoomIndex !== "number" || !rooms[item.sourceRoomIndex]) {
+		return false;
+	}
+
+	currentRoomIndex = item.sourceRoomIndex;
+	applyRoom();
+	renderRoomsGrid();
+	return true;
+}
+
+function useInventoryItem(item) {
+	if (!item) {
+		return;
+	}
+
+	let itemType = getInventoryItemType(item.key);
+	focusInventorySourceRoom(item);
+
+	if (inventoryPanel) {
+		inventoryPanel.classList.add("inventoryHidden");
+	}
+
+	if (itemType === "letter") {
+		markRoomInteraction(item.sourceRoomIndex, "letter");
+		selectedSuspect = "Mara Voss";
+		updateSuspectSelectionUi();
+		showLetterText("Mara Voss wurde in Thorns Labor gesehen. Sie muss etwas mit dem Verschwinden zu tun haben.");
+	} else if (itemType === "pinboard") {
+		markRoomInteraction(item.sourceRoomIndex, "pinboard");
+		if (pinboardOverlay) {
+			pinboardOverlay.classList.remove("pinboardOverlayHidden");
+		}
+	} else if (itemType === "map_piece") {
+		let totalPieces = mapPieceButtons.filter(Boolean).length;
+		if (countMapPiecesFound() >= totalPieces) {
+			showMap();
+		} else {
+			showHint("Du hast " + countMapPiecesFound() + " von " + totalPieces + " Kartenteilen gefunden. Mehr fehlt noch.");
+		}
+	}
+
+	updateBodyModalState();
+	renderInventory();
+}
+
 function addFoundItem(itemKey, title, sourceRoomIndex, shouldMarkRoomFound) {
 	if (!rooms[sourceRoomIndex]) {
 		return;
@@ -732,7 +812,9 @@ function addFoundItem(itemKey, title, sourceRoomIndex, shouldMarkRoomFound) {
 	foundItems.push({
 		key: itemKey,
 		title: title,
-		roomName: rooms[sourceRoomIndex].name
+		roomName: rooms[sourceRoomIndex].name,
+		sourceRoomIndex: sourceRoomIndex,
+		itemType: getInventoryItemType(itemKey)
 	});
 
 	// reward points for finding a new item
@@ -768,7 +850,29 @@ function renderInventory() {
 	foundItems.forEach(function (item) {
 		let row = document.createElement("div");
 		row.className = "inventoryFoundItem";
-		row.textContent = item.title + " - " + item.roomName;
+
+		let textWrap = document.createElement("div");
+		textWrap.className = "inventoryFoundItemText";
+
+		let titleLine = document.createElement("strong");
+		titleLine.textContent = item.title;
+
+		let roomLine = document.createElement("span");
+		roomLine.textContent = item.roomName;
+
+		textWrap.appendChild(titleLine);
+		textWrap.appendChild(roomLine);
+
+		let useButton = document.createElement("button");
+		useButton.type = "button";
+		useButton.className = "inventoryItemUseBtn";
+		useButton.textContent = getInventoryItemActionLabel(item);
+		useButton.addEventListener("click", function () {
+			useInventoryItem(item);
+		});
+
+		row.appendChild(textWrap);
+		row.appendChild(useButton);
 		inventoryFoundList.appendChild(row);
 	});
 }
@@ -1148,6 +1252,37 @@ if (mapBlackwoodBtn) {
 		renderInventory();
 		renderRoomsGrid();
 		updateBodyModalState();
+	});
+}
+
+// Map trace button hover tooltips
+let mapTooltip = document.getElementById("mapTooltip");
+
+if (mapVossBtn && mapTooltip) {
+	mapVossBtn.addEventListener("mouseenter", function () {
+		mapTooltip.textContent = "Voss";
+		mapTooltip.classList.add("visible");
+	});
+	mapVossBtn.addEventListener("mouseleave", function () {
+		mapTooltip.classList.remove("visible");
+	});
+	mapVossBtn.addEventListener("mousemove", function (e) {
+		mapTooltip.style.left = (e.clientX + 15) + "px";
+		mapTooltip.style.top = (e.clientY + 15) + "px";
+	});
+}
+
+if (mapBlackwoodBtn && mapTooltip) {
+	mapBlackwoodBtn.addEventListener("mouseenter", function () {
+		mapTooltip.textContent = "Blackwood";
+		mapTooltip.classList.add("visible");
+	});
+	mapBlackwoodBtn.addEventListener("mouseleave", function () {
+		mapTooltip.classList.remove("visible");
+	});
+	mapBlackwoodBtn.addEventListener("mousemove", function (e) {
+		mapTooltip.style.left = (e.clientX + 15) + "px";
+		mapTooltip.style.top = (e.clientY + 15) + "px";
 	});
 }
 
