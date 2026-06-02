@@ -103,12 +103,203 @@ let timerInterval = null;
 let finalAccuseMode = false;
 const guiltySuspect = "Elias Blackwood";
 
+let audioElements = {};
+let audioSystemReady = false;
+let pageMusicStarted = false;
+
+function cacheAudioElements() {
+	audioElements = {
+		uiClickSfx: document.getElementById("uiClickSfx"),
+		menuMusic: document.getElementById("menuMusic"),
+		gameMusic: document.getElementById("gameMusic"),
+		foundItemSfx: document.getElementById("foundItemSfx"),
+		foundClueSfx: document.getElementById("foundClueSfx"),
+		modalOpenSfx: document.getElementById("modalOpenSfx"),
+		modalCloseSfx: document.getElementById("modalCloseSfx"),
+		transitionSfx: document.getElementById("transitionSfx"),
+		successSfx: document.getElementById("successSfx"),
+		failureSfx: document.getElementById("failureSfx"),
+		inspectSfx: document.getElementById("inspectSfx"),
+		accuseSfx: document.getElementById("accuseSfx"),
+		cipherSolveSfx: document.getElementById("cipherSolveSfx")
+	};
+}
+
+function getAudioVolumeFromStorage(key, fallbackValue) {
+	try {
+		let storedValue = localStorage.getItem(key);
+		if (storedValue === null) {
+			return fallbackValue;
+		}
+		let numericValue = Number(storedValue);
+		return isNaN(numericValue) ? fallbackValue : numericValue;
+	} catch (e) {
+		return fallbackValue;
+	}
+}
+
+function writeAudioVolumeToStorage(key, value) {
+	try {
+		localStorage.setItem(key, String(value));
+	} catch (e) { }
+}
+
+function getVolumeFromSlider(sliderId, storageKey, fallbackValue) {
+	let slider = document.getElementById(sliderId);
+	if (slider) {
+		let sliderValue = Number(slider.value);
+		return isNaN(sliderValue) ? fallbackValue : sliderValue;
+	}
+	return getAudioVolumeFromStorage(storageKey, fallbackValue);
+}
+
+function applyAudioVolumes() {
+	let masterVolume = Math.max(0, Math.min(100, getVolumeFromSlider("allRange", "audioMasterVolume", 35))) / 100;
+	let musicVolume = Math.max(0, Math.min(100, getVolumeFromSlider("musicRange", "audioMusicVolume", 84))) / 100;
+	let sfxVolume = Math.max(0, Math.min(100, getVolumeFromSlider("sfxRange", "audioSfxVolume", 72))) / 100;
+	let speechVolume = Math.max(0, Math.min(100, getVolumeFromSlider("speechRange", "audioSpeechVolume", 23))) / 100;
+
+	if (audioElements.menuMusic) audioElements.menuMusic.volume = masterVolume * musicVolume;
+	if (audioElements.gameMusic) audioElements.gameMusic.volume = masterVolume * musicVolume;
+	if (audioElements.uiClickSfx) audioElements.uiClickSfx.volume = masterVolume * sfxVolume;
+	if (audioElements.foundItemSfx) audioElements.foundItemSfx.volume = masterVolume * sfxVolume;
+	if (audioElements.foundClueSfx) audioElements.foundClueSfx.volume = masterVolume * sfxVolume;
+	if (audioElements.modalOpenSfx) audioElements.modalOpenSfx.volume = masterVolume * sfxVolume;
+	if (audioElements.modalCloseSfx) audioElements.modalCloseSfx.volume = masterVolume * sfxVolume;
+	if (audioElements.transitionSfx) audioElements.transitionSfx.volume = masterVolume * sfxVolume;
+	if (audioElements.successSfx) audioElements.successSfx.volume = masterVolume * sfxVolume;
+	if (audioElements.failureSfx) audioElements.failureSfx.volume = masterVolume * sfxVolume;
+	if (audioElements.inspectSfx) audioElements.inspectSfx.volume = masterVolume * sfxVolume;
+	if (audioElements.accuseSfx) audioElements.accuseSfx.volume = masterVolume * sfxVolume;
+	if (audioElements.cipherSolveSfx) audioElements.cipherSolveSfx.volume = masterVolume * sfxVolume;
+
+	writeAudioVolumeToStorage("audioMasterVolume", masterVolume * 100);
+	writeAudioVolumeToStorage("audioMusicVolume", musicVolume * 100);
+	writeAudioVolumeToStorage("audioSfxVolume", sfxVolume * 100);
+	writeAudioVolumeToStorage("audioSpeechVolume", speechVolume * 100);
+}
+
+function playAudio(audioId) {
+	let audio = audioElements[audioId] || document.getElementById(audioId);
+	if (!audio) {
+		return;
+	}
+
+	try {
+		audio.currentTime = 0;
+		let playPromise = audio.play();
+		if (playPromise && typeof playPromise.catch === "function") {
+			playPromise.catch(function () { });
+		}
+	} catch (e) { }
+}
+
+function pauseAudio(audioId) {
+	let audio = audioElements[audioId] || document.getElementById(audioId);
+	if (!audio) {
+		return;
+	}
+
+	try {
+		audio.pause();
+	} catch (e) { }
+}
+
+function startBackgroundMusic(audioId) {
+	let audio = audioElements[audioId] || document.getElementById(audioId);
+	if (!audio) {
+		return;
+	}
+
+	["menuMusic", "gameMusic"].forEach(function (otherAudioId) {
+		if (otherAudioId !== audioId) {
+			pauseAudio(otherAudioId);
+		}
+	});
+
+	audio.loop = true;
+	try {
+		let playPromise = audio.play();
+		if (playPromise && typeof playPromise.catch === "function") {
+			playPromise.catch(function () { });
+		}
+	} catch (e) { }
+}
+
+function bindAudioSettings() {
+	let masterSlider = document.getElementById("allRange");
+	let musicSlider = document.getElementById("musicRange");
+	let sfxSlider = document.getElementById("sfxRange");
+	let speechSlider = document.getElementById("speechRange");
+
+	function handleAudioSettingsChange() {
+		applyAudioVolumes();
+	}
+
+	if (masterSlider) {
+		masterSlider.value = getAudioVolumeFromStorage("audioMasterVolume", Number(masterSlider.value || 35));
+		masterSlider.addEventListener("input", handleAudioSettingsChange);
+	}
+	if (musicSlider) {
+		musicSlider.value = getAudioVolumeFromStorage("audioMusicVolume", Number(musicSlider.value || 84));
+		musicSlider.addEventListener("input", handleAudioSettingsChange);
+	}
+	if (sfxSlider) {
+		sfxSlider.value = getAudioVolumeFromStorage("audioSfxVolume", Number(sfxSlider.value || 72));
+		sfxSlider.addEventListener("input", handleAudioSettingsChange);
+	}
+	if (speechSlider) {
+		speechSlider.value = getAudioVolumeFromStorage("audioSpeechVolume", Number(speechSlider.value || 23));
+		speechSlider.addEventListener("input", handleAudioSettingsChange);
+	}
+
+	applyAudioVolumes();
+}
+
+function initAudioSystem() {
+	if (audioSystemReady) {
+		return;
+	}
+
+	cacheAudioElements();
+	bindAudioSettings();
+
+	if (document.body && document.body.id === "gameBody") {
+		document.addEventListener("pointerdown", function () {
+			if (!pageMusicStarted) {
+				pageMusicStarted = true;
+				startBackgroundMusic("gameMusic");
+			}
+		}, { once: true });
+	} else if (document.getElementById("mainBox")) {
+		document.addEventListener("pointerdown", function () {
+			if (!pageMusicStarted) {
+				pageMusicStarted = true;
+				startBackgroundMusic("menuMusic");
+			}
+		}, { once: true });
+	}
+
+	document.addEventListener("click", function (event) {
+		let interactiveTarget = event.target.closest("button, a, input[type='range'], [role='button']");
+		if (interactiveTarget) {
+			playAudio("uiClickSfx");
+		}
+	}, true);
+
+	audioSystemReady = true;
+}
+
 function roomInteractionKey(roomIndex, interactionKey) {
 	return roomIndex + ":" + interactionKey;
 }
 
 function markRoomInteraction(roomIndex, interactionKey) {
+	let alreadyMarked = hasRoomInteraction(roomIndex, interactionKey);
 	roomInteractionFlags[roomInteractionKey(roomIndex, interactionKey)] = true;
+	if (!alreadyMarked) {
+		playAudio("foundClueSfx");
+	}
 	if (roomIndex === 0 && isRoomFullyExplored(0) && !firstLevelTransitionShown) {
 		firstLevelTransitionShown = true;
 		showTransitionStory();
@@ -163,6 +354,7 @@ function handleTimeOut() {
 function handleGameOver(won, message) {
 	stopTimer();
 	finalAccuseMode = false;
+	playAudio(won ? "successSfx" : "failureSfx");
 	let elapsedSeconds = Math.max(0, timerSeconds);
 	let suspectText = selectedSuspect || 'Keine Spur gewählt';
 	if (resultModal) {
@@ -364,6 +556,8 @@ function startFirstRoom() {
 		return;
 	}
 
+	startBackgroundMusic("gameMusic");
+
 	if (storyIntroModal) {
 		storyIntroModal.classList.add("gameModalHidden");
 	}
@@ -491,12 +685,14 @@ function showTransitionStory() {
 		return;
 	}
 
+	playAudio("transitionSfx");
 	storyAfterFirstLevelModal.classList.remove("gameModalHidden");
 	updateBodyModalState();
 }
 
 function startSecondRoom() {
 	hideTransitionStory();
+	playAudio("modalCloseSfx");
 	currentRoomIndex = 1;
 	applyRoom();
 	renderInventory();
@@ -509,13 +705,16 @@ function showLetterText(text) {
 		return;
 	}
 
+	playAudio("inspectSfx");
 	letterNoteText.textContent = text;
 	letterNoteCard.classList.remove("letterNoteHidden");
+	playAudio("modalOpenSfx");
 }
 
 function closeLetterText() {
 	if (letterNoteCard) {
 		letterNoteCard.classList.add("letterNoteHidden");
+		playAudio("modalCloseSfx");
 	}
 }
 
@@ -524,15 +723,18 @@ function showHint(text) {
 		return;
 	}
 
+	playAudio("inspectSfx");
 	if (text) {
 		hintText.textContent = text;
 	}
 	hintCard.classList.remove("letterNoteHidden");
+	playAudio("modalOpenSfx");
 }
 
 function closeHintText() {
 	if (hintCard) {
 		hintCard.classList.add("letterNoteHidden");
+		playAudio("modalCloseSfx");
 	}
 }
 
@@ -541,6 +743,7 @@ function showFinalReveal() {
 		return;
 	}
 
+	playAudio("inspectSfx");
 	let room = rooms[currentRoomIndex];
 	let revealText = "Die letzte Spur ist eindeutig: Elias Blackwood hat den Fall inszeniert.";
 	let accuseLabel = "Blackwood beschuldigen";
@@ -563,12 +766,14 @@ function showFinalReveal() {
 		finalRevealAccuseBtn.textContent = accuseLabel;
 	}
 	finalRevealCard.classList.remove("letterNoteHidden");
+	playAudio("modalOpenSfx");
 	updateBodyModalState();
 }
 
 function closeFinalRevealCard() {
 	if (finalRevealCard) {
 		finalRevealCard.classList.add("letterNoteHidden");
+		playAudio("modalCloseSfx");
 		updateBodyModalState();
 	}
 }
@@ -577,13 +782,17 @@ function showMap() {
 	if (!mapOverlay) {
 		return;
 	}
+
+	playAudio("inspectSfx");
 	mapOverlay.classList.remove("mapOverlayHidden");
+	playAudio("modalOpenSfx");
 	updateBodyModalState();
 }
 
 function closeMapText() {
 	if (mapOverlay) {
 		mapOverlay.classList.add("mapOverlayHidden");
+		playAudio("modalCloseSfx");
 		updateBodyModalState();
 	}
 }
@@ -605,6 +814,7 @@ function updateCipherProgressText() {
 function resetCipherPuzzle(message) {
 	cipherCurrentIndex = 0;
 	cipherSolved = false;
+	playAudio("modalCloseSfx");
 
 	if (cipherGrid) {
 		let buttons = cipherGrid.querySelectorAll(".cipherLetterBtn");
@@ -622,6 +832,7 @@ function resetCipherPuzzle(message) {
 
 function solveCipherPuzzle() {
 	cipherSolved = true;
+	playAudio("cipherSolveSfx");
 	if (cipherFeedback) {
 		cipherFeedback.textContent = "Die Maschine formt den Namen BLACKWOOD. Das wirkt fast zu sauber - vielleicht hat Voss diese Spur gelegt.";
 	}
@@ -786,6 +997,7 @@ function useInventoryItem(item) {
 		markRoomInteraction(item.sourceRoomIndex, "pinboard");
 		if (pinboardOverlay) {
 			pinboardOverlay.classList.remove("pinboardOverlayHidden");
+			playAudio("modalOpenSfx");
 		}
 	} else if (itemType === "map_piece") {
 		let totalPieces = mapPieceButtons.filter(Boolean).length;
@@ -816,6 +1028,8 @@ function addFoundItem(itemKey, title, sourceRoomIndex, shouldMarkRoomFound) {
 		sourceRoomIndex: sourceRoomIndex,
 		itemType: getInventoryItemType(itemKey)
 	});
+
+	playAudio("foundItemSfx");
 
 	// reward points for finding a new item
 	addScore(100);
@@ -948,6 +1162,7 @@ function openRoomsModal() {
 
 	renderRoomsGrid();
 	roomsModal.classList.remove("gameModalHidden");
+	playAudio("modalOpenSfx");
 	updateBodyModalState();
 }
 
@@ -957,6 +1172,7 @@ function closeRoomsModal() {
 	}
 
 	roomsModal.classList.add("gameModalHidden");
+	playAudio("modalCloseSfx");
 	updateBodyModalState();
 }
 
@@ -967,6 +1183,7 @@ function openSuspectsModal() {
 
 	updateSuspectSelectionUi();
 	suspectsModal.classList.remove("gameModalHidden");
+	playAudio("modalOpenSfx");
 	updateBodyModalState();
 }
 
@@ -976,6 +1193,7 @@ function closeSuspectsModal() {
 	}
 
 	suspectsModal.classList.add("gameModalHidden");
+	playAudio("modalCloseSfx");
 	updateBodyModalState();
 }
 
@@ -1302,6 +1520,8 @@ function finalizeAccusation() {
 		showHint('Wähle zuerst einen Verdächtigen.');
 		return;
 	}
+
+	playAudio("accuseSfx");
 	closeSuspectsModal();
 	if (selectedSuspect === guiltySuspect) {
 		handleGameOver(true, 'Deine Anklage war korrekt! Der wahre Täter wurde gestellt.');
@@ -1525,4 +1745,6 @@ if (document.getElementById('gameBody') || document.body.id === 'rulesCompactPag
 		ensureAnimeForGameButtons();
 	}
 }
+
+initAudioSystem();
 
