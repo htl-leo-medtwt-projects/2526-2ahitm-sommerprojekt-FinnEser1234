@@ -300,6 +300,27 @@ function initAudioSystem() {
 			}
 		}, { once: true });
 	} else if (document.getElementById("mainBox") || document.body.id === 'settingsPage') {
+		let audioGateOverlay = document.getElementById("audioGateOverlay");
+		let audioGateBtn = document.getElementById("audioGateBtn");
+		function startMenuAudioGate() {
+			tryUnlockAudio();
+			if (!pageMusicStarted) {
+				pageMusicStarted = true;
+				startBackgroundMusic("menuMusic");
+			}
+			if (audioGateOverlay) {
+				audioGateOverlay.style.display = "none";
+			}
+		}
+
+		if (audioGateBtn) {
+			audioGateBtn.addEventListener("pointerdown", function (event) {
+				event.preventDefault();
+				event.stopPropagation();
+				startMenuAudioGate();
+			}, { once: true });
+		}
+
 		document.addEventListener("pointerdown", function () {
 			tryUnlockAudio();
 			if (!pageMusicStarted) {
