@@ -264,15 +264,44 @@ function initAudioSystem() {
 	cacheAudioElements();
 	bindAudioSettings();
 
+	function tryUnlockAudio() {
+		try {
+			let audios = document.querySelectorAll('audio');
+			audios.forEach(function (a) {
+				try {
+					let p = a.play();
+					if (p && typeof p.then === 'function') {
+						p.then(function () { a.pause(); a.currentTime = 0; }).catch(function () { });
+					} else {
+						a.pause();
+						a.currentTime = 0;
+					}
+				} catch (e) { }
+			});
+		} catch (e) { }
+
+		try {
+			var C = window.AudioContext || window.webkitAudioContext;
+			if (C) {
+				window.__gameAudioContext = window.__gameAudioContext || new C();
+				if (window.__gameAudioContext.state === 'suspended') {
+					window.__gameAudioContext.resume().catch(function () { });
+				}
+			}
+		} catch (e) { }
+	}
+
 	if (document.body && document.body.id === "gameBody") {
 		document.addEventListener("pointerdown", function () {
+			tryUnlockAudio();
 			if (!pageMusicStarted) {
 				pageMusicStarted = true;
 				startBackgroundMusic("gameMusic");
 			}
 		}, { once: true });
-	} else if (document.getElementById("mainBox")) {
+	} else if (document.getElementById("mainBox") || document.body.id === 'settingsPage') {
 		document.addEventListener("pointerdown", function () {
+			tryUnlockAudio();
 			if (!pageMusicStarted) {
 				pageMusicStarted = true;
 				startBackgroundMusic("menuMusic");
@@ -281,6 +310,15 @@ function initAudioSystem() {
 	}
 
 	document.addEventListener("click", function (event) {
+		// If an element defines a specific sound via data-sound, play it.
+		let soundTarget = event.target.closest('[data-sound]');
+		if (soundTarget) {
+			let soundId = soundTarget.getAttribute('data-sound');
+			if (soundId) playAudio(soundId);
+			return;
+		}
+
+		// Fallback: play the default UI click for buttons/links/controls
 		let interactiveTarget = event.target.closest("button, a, input[type='range'], [role='button']");
 		if (interactiveTarget) {
 			playAudio("uiClickSfx");

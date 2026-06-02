@@ -101,10 +101,10 @@
             <button type="button" id="mapPieceBtn4" class="mapPieceBtn" aria-label="Kartenteil 4 aufnehmen">4</button>
         </div>
     </section>
-
-    <section id="pinboardOverlay" class="pinboardOverlay pinboardOverlayHidden" aria-modal="true" role="dialog" aria-label="Pinnwand">
-        <button type="button" id="pinboardCloseBtn" class="pinboardCloseBtn" aria-label="Pinnwand schließen">
-            Zurück
+                    <button type="button" id="mapPieceBtn1" class="mapPieceBtn" aria-label="Kartenteil 1 aufnehmen" data-sound="uiClickSfx2">1</button>
+                    <button type="button" id="mapPieceBtn2" class="mapPieceBtn" aria-label="Kartenteil 2 aufnehmen" data-sound="uiClickSfx2">2</button>
+                    <button type="button" id="mapPieceBtn3" class="mapPieceBtn" aria-label="Kartenteil 3 aufnehmen" data-sound="uiClickSfx2">3</button>
+                    <button type="button" id="mapPieceBtn4" class="mapPieceBtn" aria-label="Kartenteil 4 aufnehmen" data-sound="uiClickSfx2">4</button>
         </button>
 
         <div class="pinboardSurface"></div>
@@ -113,7 +113,7 @@
     <section id="windowOverlay" class="windowOverlay windowOverlayHidden" aria-modal="true" role="dialog" aria-label="Fensteransicht">
         <button type="button" id="windowCloseBtn" class="pinboardCloseBtn" aria-label="Fensteransicht schließen">
             Zurück
-        </button>
+                <div class="pinboardSurface" data-sound="uiClickSfx2"></div>
         <img src="../IMG/FensterWissenschaftsraum.png" alt="Blick aus dem Fenster im Wissenschaftsraum" class="windowOverlayImage">
     </section>
 
@@ -220,17 +220,9 @@
         <div id="inventoryFoundList" class="inventoryFoundList"></div>
     </aside>
 
-    <audio id="uiClickSfx" src="../audio/ui-click.mp3" preload="auto"></audio>
-    <audio id="gameMusic" src="../audio/game-theme.mp3" preload="auto" loop></audio>
-    <audio id="foundItemSfx" src="../audio/found-item.mp3" preload="auto"></audio>
-    <audio id="foundClueSfx" src="../audio/found-clue.mp3" preload="auto"></audio>
-    <audio id="modalOpenSfx" src="../audio/modal-open.mp3" preload="auto"></audio>
-    <audio id="modalCloseSfx" src="../audio/modal-close.mp3" preload="auto"></audio>
-    <audio id="transitionSfx" src="../audio/transition.mp3" preload="auto"></audio>
-    <audio id="successSfx" src="../audio/success.mp3" preload="auto"></audio>
-    <audio id="failureSfx" src="../audio/failure.mp3" preload="auto"></audio>
-    <audio id="inspectSfx" src="../audio/inspect.mp3" preload="auto"></audio>
-    <audio id="accuseSfx" src="../audio/accuse.mp3" preload="auto"></audio>
-    <audio id="cipherSolveSfx" src="../audio/cipher-solve.mp3" preload="auto"></audio>
+    <audio id="uiClickSfx" src="../audio/click.mp3" preload="auto"></audio>
+    <audio id="gameMusic" src="../audio/background.mp3" preload="auto" loop></audio>
+    <audio id="successSfx" src="../audio/victory.mp3" preload="auto"></audio>
+    <audio id="failureSfx" src="../audio/lose.mp3" preload="auto"></audio>
 </body>
 </html>
