@@ -110,6 +110,7 @@ let pageMusicStarted = false;
 function cacheAudioElements() {
 	audioElements = {
 		uiClickSfx: document.getElementById("uiClickSfx"),
+			uiClickSfx2: document.getElementById("uiClickSfx2"),
 		menuMusic: document.getElementById("menuMusic"),
 		gameMusic: document.getElementById("gameMusic"),
 		foundItemSfx: document.getElementById("foundItemSfx"),
@@ -162,6 +163,7 @@ function applyAudioVolumes() {
 	if (audioElements.menuMusic) audioElements.menuMusic.volume = masterVolume * musicVolume;
 	if (audioElements.gameMusic) audioElements.gameMusic.volume = masterVolume * musicVolume;
 	if (audioElements.uiClickSfx) audioElements.uiClickSfx.volume = masterVolume * sfxVolume;
+	if (audioElements.uiClickSfx2) audioElements.uiClickSfx2.volume = masterVolume * sfxVolume;
 	if (audioElements.foundItemSfx) audioElements.foundItemSfx.volume = masterVolume * sfxVolume;
 	if (audioElements.foundClueSfx) audioElements.foundClueSfx.volume = masterVolume * sfxVolume;
 	if (audioElements.modalOpenSfx) audioElements.modalOpenSfx.volume = masterVolume * sfxVolume;
