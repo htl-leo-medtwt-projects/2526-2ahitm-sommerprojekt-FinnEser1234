@@ -105,7 +105,6 @@ const guiltySuspect = "Elias Blackwood";
 
 let audioElements = {};
 let audioSystemReady = false;
-let pageMusicStarted = false;
 
 function cacheAudioElements() {
 	audioElements = {
@@ -115,6 +114,7 @@ function cacheAudioElements() {
 		gameMusic: document.getElementById("gameMusic"),
 		foundItemSfx: document.getElementById("foundItemSfx"),
 		foundClueSfx: document.getElementById("foundClueSfx"),
+			backpackSfx: document.getElementById("backpackSfx"),
 		modalOpenSfx: document.getElementById("modalOpenSfx"),
 		modalCloseSfx: document.getElementById("modalCloseSfx"),
 		transitionSfx: document.getElementById("transitionSfx"),
@@ -169,6 +169,7 @@ function applyAudioVolumes() {
 	if (audioElements.modalOpenSfx) audioElements.modalOpenSfx.volume = masterVolume * sfxVolume;
 	if (audioElements.modalCloseSfx) audioElements.modalCloseSfx.volume = masterVolume * sfxVolume;
 	if (audioElements.transitionSfx) audioElements.transitionSfx.volume = masterVolume * sfxVolume;
+	if (audioElements.backpackSfx) audioElements.backpackSfx.volume = masterVolume * sfxVolume;
 	if (audioElements.successSfx) audioElements.successSfx.volume = masterVolume * sfxVolume;
 	if (audioElements.failureSfx) audioElements.failureSfx.volume = masterVolume * sfxVolume;
 	if (audioElements.inspectSfx) audioElements.inspectSfx.volume = masterVolume * sfxVolume;
@@ -1104,6 +1105,8 @@ function addFoundItem(itemKey, title, sourceRoomIndex, shouldMarkRoomFound) {
 	});
 
 	playAudio("foundItemSfx");
+	// play backpacking sound for items that go into the inventory
+	playAudio("backpackSfx");
 
 	// reward points for finding a new item
 	addScore(100);
