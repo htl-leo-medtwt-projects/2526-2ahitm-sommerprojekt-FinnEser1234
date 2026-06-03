@@ -341,6 +341,13 @@ function initAudioSystem() {
 			return;
 		}
 
+		// If the element (or an ancestor) explicitly requests no sound, skip SFX.
+		// Use attribute `data-no-sound` or common hotspot classes to exclude.
+		let noSfxTarget = event.target.closest('[data-no-sound], .mapPieceBtn, .suspectPickBtn, #deskLetterBtn, .pinboardOverlay');
+		if (noSfxTarget) {
+			return;
+		}
+
 		// Fallback: play the default UI click for buttons/links/controls
 		let interactiveTarget = event.target.closest("button, a, input[type='range'], [role='button']");
 		if (interactiveTarget) {
