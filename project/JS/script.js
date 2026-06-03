@@ -305,15 +305,20 @@ function initAudioSystem() {
 	} else if (document.getElementById("mainBox") || document.body.id === 'settingsPage') {
 		let audioGateOverlay = document.getElementById("audioGateOverlay");
 		let audioGateBtn = document.getElementById("audioGateBtn");
+
+		function hideAudioGateOverlay() {
+			if (audioGateOverlay) {
+				audioGateOverlay.style.display = "none";
+			}
+		}
+
 		function startMenuAudioGate() {
 			tryUnlockAudio();
 			if (!pageMusicStarted) {
 				pageMusicStarted = true;
 				startBackgroundMusic("menuMusic");
 			}
-			if (audioGateOverlay) {
-				audioGateOverlay.style.display = "none";
-			}
+			hideAudioGateOverlay();
 		}
 
 		if (audioGateBtn) {
@@ -330,6 +335,7 @@ function initAudioSystem() {
 				pageMusicStarted = true;
 				startBackgroundMusic("menuMusic");
 			}
+			hideAudioGateOverlay();
 		}, { once: true });
 	}
 
