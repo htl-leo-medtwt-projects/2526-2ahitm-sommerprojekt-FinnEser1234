@@ -17,10 +17,10 @@ window.rooms = [
     "letter": { "top": "69%", "left": "58%", "width": "94px", "height": "72px" },
     "encryption": { "top": "35%", "left": "82%", "width": "15%", "height": "20%" },
     "mapPieces": [
-      { "top": "72%", "left": "18%", "width": "7%", "height": "10%" },
-      { "top": "79%", "left": "36%", "width": "7%", "height": "10%" },
-      { "top": "74%", "left": "54%", "width": "7%", "height": "10%" },
-      { "top": "78%", "left": "71%", "width": "7%", "height": "10%" }
+      { "top": "62%", "left": "14%", "width": "8%", "height": "11%" },
+      { "top": "72%", "left": "33%", "width": "8%", "height": "11%" },
+      { "top": "48%", "left": "55%", "width": "8%", "height": "11%" },
+      { "top": "66%", "left": "74%", "width": "8%", "height": "11%" }
     ]
   },
   {
