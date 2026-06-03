@@ -74,30 +74,30 @@
                 </div>
             </div>
 
-            <button type="button" id="pinboardFocusBtn" class="pinboardFocusBtn" aria-label="Pinnwand untersuchen">
+            <button type="button" id="pinboardFocusBtn" class="pinboardFocusBtn" aria-label="Pinnwand untersuchen" data-no-sound>
                 Pinnwand untersuchen
             </button>
 
-            <button type="button" id="deskLetterBtn" class="deskLetterBtn" aria-label="Brief auf dem Schreibtisch ansehen">
+            <button type="button" id="deskLetterBtn" class="deskLetterBtn" aria-label="Brief auf dem Schreibtisch ansehen" data-no-sound>
                 Brief
             </button>
 
-            <button type="button" id="encryptionMachineBtn" class="encryptionMachineBtn" aria-label="Verschlüsselungsmaschine untersuchen">
+            <button type="button" id="encryptionMachineBtn" class="encryptionMachineBtn" aria-label="Verschlüsselungsmaschine untersuchen" data-no-sound>
                 Verschlüsselungsmaschine
             </button>
 
-            <button type="button" id="windowInspectBtn" class="windowInspectBtn" aria-label="Fenster ansehen">
+            <button type="button" id="windowInspectBtn" class="windowInspectBtn" aria-label="Fenster ansehen" data-no-sound>
                 Fenster ansehen
             </button>
 
-            <button type="button" id="finalClueBtn" class="finalClueBtn" aria-label="Letzten Hinweis untersuchen">
+            <button type="button" id="finalClueBtn" class="finalClueBtn" aria-label="Letzten Hinweis untersuchen" data-no-sound>
                 Letzter Hinweis
             </button>
 
-            <button type="button" id="mapPieceBtn1" class="mapPieceBtn" aria-label="Kartenteil 1 aufnehmen">1</button>
-            <button type="button" id="mapPieceBtn2" class="mapPieceBtn" aria-label="Kartenteil 2 aufnehmen">2</button>
-            <button type="button" id="mapPieceBtn3" class="mapPieceBtn" aria-label="Kartenteil 3 aufnehmen">3</button>
-            <button type="button" id="mapPieceBtn4" class="mapPieceBtn" aria-label="Kartenteil 4 aufnehmen">4</button>
+            <button type="button" id="mapPieceBtn1" class="mapPieceBtn" aria-label="Kartenteil 1 aufnehmen" data-no-sound>1</button>
+            <button type="button" id="mapPieceBtn2" class="mapPieceBtn" aria-label="Kartenteil 2 aufnehmen" data-no-sound>2</button>
+            <button type="button" id="mapPieceBtn3" class="mapPieceBtn" aria-label="Kartenteil 3 aufnehmen" data-no-sound>3</button>
+            <button type="button" id="mapPieceBtn4" class="mapPieceBtn" aria-label="Kartenteil 4 aufnehmen" data-no-sound>4</button>
         </div>
     </section>
 
@@ -108,7 +108,7 @@
 
     <section id="pinboardOverlay" class="pinboardOverlay pinboardOverlayHidden" aria-modal="true" role="dialog" aria-label="Pinnwand">
         <button type="button" id="pinboardCloseBtn" class="pinboardCloseBtn" aria-label="Pinnwand schließen">Zurück</button>
-        <div class="pinboardSurface" data-sound="uiClickSfx2"></div>
+        <div class="pinboardSurface" data-no-sound></div>
     </section>
 
     <section id="mapOverlay" class="mapOverlay mapOverlayHidden" aria-modal="true" role="dialog" aria-label="Karte mit Spuren">
@@ -118,8 +118,8 @@
         <div id="mapTooltip" class="mapTooltip"></div>
         <div class="mapContainer">
             <img src="../IMG/FullMap.png" alt="Karte mit den beiden Spuren" class="mapOverlayImage">
-            <button type="button" id="mapVossBtn" class="mapTraceBtn mapVossBtn" aria-label="Spur von Voss" title="Spur: Voss"></button>
-            <button type="button" id="mapBlackwoodBtn" class="mapTraceBtn mapBlackwoodBtn" aria-label="Spur von Blackwood" title="Spur: Blackwood"></button>
+            <button type="button" id="mapVossBtn" class="mapTraceBtn mapVossBtn" aria-label="Spur von Voss" title="Spur: Voss" data-no-sound></button>
+            <button type="button" id="mapBlackwoodBtn" class="mapTraceBtn mapBlackwoodBtn" aria-label="Spur von Blackwood" title="Spur: Blackwood" data-no-sound></button>
         </div>
     </section>
 
@@ -165,14 +165,14 @@
             <p class="suspectsIntro">Wähle eine aktuelle Hauptspur aus.</p>
             <p class="suspectsHint">8 Personen stehen unter Verdacht. Die Maschine kann Hinweise liefern, aber auch in die Irre fuehren.</p>
             <div class="suspectsGrid">
-                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Mara Voss">Mara Voss</button>
-                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Inspektor Hale">Inspektor Hale</button>
-                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Nora Graves">Nora Graves</button>
-                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Elias Blackwood">Elias Blackwood</button>
-                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Jonas Reed">Jonas Reed</button>
-                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Selma Hart">Selma Hart</button>
-                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Dr. Quinn">Dr. Quinn</button>
-                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Luca Sterling">Luca Sterling</button>
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Mara Voss" data-no-sound>Mara Voss</button>
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Inspektor Hale" data-no-sound>Inspektor Hale</button>
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Nora Graves" data-no-sound>Nora Graves</button>
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Elias Blackwood" data-no-sound>Elias Blackwood</button>
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Jonas Reed" data-no-sound>Jonas Reed</button>
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Selma Hart" data-no-sound>Selma Hart</button>
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Dr. Quinn" data-no-sound>Dr. Quinn</button>
+                <button type="button" class="caseStartButton suspectPickBtn" data-suspect="Luca Sterling" data-no-sound>Luca Sterling</button>
             </div>
             <button type="button" id="finalizeAccuseBtn" class="caseStartButton">Beschuldigen</button>
             <button type="button" id="closeSuspectsBtn" class="caseStartButton">Zurück</button>
