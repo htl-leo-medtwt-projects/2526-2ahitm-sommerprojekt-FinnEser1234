@@ -71,7 +71,6 @@
                 </button>
                 <div id="gameHud" class="gameHud">
                     <span id="timerDisplay">00:00</span>
-                    <button type="button" id="accuseBtn" class="caseStartButton">Beschuldigen</button>
                 </div>
             </div>
 
@@ -101,20 +100,15 @@
             <button type="button" id="mapPieceBtn4" class="mapPieceBtn" aria-label="Kartenteil 4 aufnehmen">4</button>
         </div>
     </section>
-                    <button type="button" id="mapPieceBtn1" class="mapPieceBtn" aria-label="Kartenteil 1 aufnehmen" data-sound="uiClickSfx2">1</button>
-                    <button type="button" id="mapPieceBtn2" class="mapPieceBtn" aria-label="Kartenteil 2 aufnehmen" data-sound="uiClickSfx2">2</button>
-                    <button type="button" id="mapPieceBtn3" class="mapPieceBtn" aria-label="Kartenteil 3 aufnehmen" data-sound="uiClickSfx2">3</button>
-                    <button type="button" id="mapPieceBtn4" class="mapPieceBtn" aria-label="Kartenteil 4 aufnehmen" data-sound="uiClickSfx2">4</button>
-        </button>
-
-        <div class="pinboardSurface"></div>
-    </section>
 
     <section id="windowOverlay" class="windowOverlay windowOverlayHidden" aria-modal="true" role="dialog" aria-label="Fensteransicht">
-        <button type="button" id="windowCloseBtn" class="pinboardCloseBtn" aria-label="Fensteransicht schließen">
-            Zurück
-                <div class="pinboardSurface" data-sound="uiClickSfx2"></div>
+        <button type="button" id="windowCloseBtn" class="pinboardCloseBtn" aria-label="Fensteransicht schließen">Zurück</button>
         <img src="../IMG/FensterWissenschaftsraum.png" alt="Blick aus dem Fenster im Wissenschaftsraum" class="windowOverlayImage">
+    </section>
+
+    <section id="pinboardOverlay" class="pinboardOverlay pinboardOverlayHidden" aria-modal="true" role="dialog" aria-label="Pinnwand">
+        <button type="button" id="pinboardCloseBtn" class="pinboardCloseBtn" aria-label="Pinnwand schließen">Zurück</button>
+        <div class="pinboardSurface" data-sound="uiClickSfx2"></div>
     </section>
 
     <section id="mapOverlay" class="mapOverlay mapOverlayHidden" aria-modal="true" role="dialog" aria-label="Karte mit Spuren">

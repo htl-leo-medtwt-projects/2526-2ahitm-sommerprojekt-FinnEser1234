@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'Sherlock';
-    src: url('../FONT/Sherlock\ Vintage.ttf');
+    src: url('../FONT/Sherlock Vintage.ttf');
 }
 
 :root {
@@ -1110,9 +1110,26 @@ body.modalOpen {
 }
 .finalClueBtn:hover,
 .finalClueBtn:focus-visible {
-    opacity: 0;
-    box-shadow: none;
-    background: rgba(60, 28, 16, 0.22);
+    opacity: 1;
+    box-shadow: 0 0 0 2px rgba(255, 241, 220, 0.55) inset, 0 0 0 2px rgba(255, 214, 156, 0.32), 0 0 22px rgba(255, 214, 156, 0.24);
+    background: rgba(76, 40, 18, 0.36);
+}
+
+.finalClueBtn {
+    transition: opacity 160ms ease, box-shadow 180ms ease, transform 140ms ease;
+}
+
+.finalClueBtn.finalClueBoxVisible {
+    opacity: 0.12;
+    background: rgba(60,28,16,0.18);
+    border: 2px dashed rgba(199,134,57,0.22);
+    cursor: pointer;
+}
+
+.finalClueBtn.finalClueBoxVisible:hover,
+.finalClueBtn.finalClueBoxVisible:focus-visible {
+    opacity: 1;
+    transform: translateY(-2px);
 }
 .pinboardOverlayHidden {
     display: none;
@@ -1126,12 +1143,6 @@ body.modalOpen {
     align-items: center;
     justify-items: center;
     background: rgba(0, 0, 0, 0.92);
-.finalClueBtn:hover,
-.finalClueBtn:focus-visible {
-    opacity: 1;
-    box-shadow: 0 0 0 2px rgba(255, 241, 220, 0.55) inset, 0 0 0 2px rgba(255, 214, 156, 0.32), 0 0 22px rgba(255, 214, 156, 0.24);
-    background: rgba(76, 40, 18, 0.36);
-}
     padding: 20px;
     box-sizing: border-box;
 }

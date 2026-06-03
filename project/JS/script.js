@@ -725,11 +725,11 @@ function applyRoom() {
 			setHotspot(finalClueBtn, room.finalClue);
 			finalClueBtn.style.display = "block";
 			finalClueBtn.style.pointerEvents = "auto";
-			finalClueBtn.style.opacity = "0";
+			finalClueBtn.classList.add('finalClueBoxVisible');
 		} else {
 			finalClueBtn.style.display = "none";
 			finalClueBtn.style.pointerEvents = "none";
-			finalClueBtn.style.opacity = "0";
+			finalClueBtn.classList.remove('finalClueBoxVisible');
 		}
 	}
 }
@@ -825,6 +825,12 @@ function showFinalReveal() {
 	finalRevealText.textContent = revealText;
 	if (finalRevealAccuseBtn) {
 		finalRevealAccuseBtn.textContent = accuseLabel;
+		// hide accuse button in specific final rooms (Blackwood and Voss)
+		if (currentRoomIndex === 2 || currentRoomIndex === 3) {
+			finalRevealAccuseBtn.style.display = 'none';
+		} else {
+			finalRevealAccuseBtn.style.display = '';
+		}
 	}
 	finalRevealCard.classList.remove("letterNoteHidden");
 	playAudio("modalOpenSfx");
@@ -1591,15 +1597,9 @@ function finalizeAccusation() {
 	}
 }
 
-// Button: accuse from HUD
-let accuseBtnEl = document.getElementById('accuseBtn');
-if (accuseBtnEl) {
-	accuseBtnEl.addEventListener('click', function () {
-		finalAccuseMode = true;
-		openSuspectsModal();
-	});
-}
+// HUD accuse button removed: feature disabled per design
 
+// Finalize accusation button in suspects modal
 let finalizeAccuseBtnEl = document.getElementById('finalizeAccuseBtn');
 if (finalizeAccuseBtnEl) {
 	finalizeAccuseBtnEl.addEventListener('click', function () {
@@ -1607,13 +1607,15 @@ if (finalizeAccuseBtnEl) {
 	});
 }
 
-let restartBtnEl = document.getElementById('restartBtn');
-if (restartBtnEl) {
-	restartBtnEl.addEventListener('click', function () {
-		// simple restart: reload the page
-		window.location.reload();
+// Restart button handler
+let restartBtn = document.getElementById('restartBtn');
+if (restartBtn) {
+	restartBtn.addEventListener('click', function () {
+		try { location.reload(); } catch (e) { window.location.href = window.location.href; }
 	});
 }
+
+// Ensure audio system is initialized on pages with audio (initialized later)
 
 // -- Start Menu: anime.js animations (entry, hover, click, title loop)
 function initMenuWithAnime() {
