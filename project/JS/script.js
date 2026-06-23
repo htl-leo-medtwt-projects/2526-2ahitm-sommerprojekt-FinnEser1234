@@ -105,6 +105,7 @@ const guiltySuspect = "Elias Blackwood";
 
 let audioElements = {};
 let audioSystemReady = false;
+let pageMusicStarted = false;
 
 function cacheAudioElements() {
 	audioElements = {
@@ -309,6 +310,11 @@ function initAudioSystem() {
 		function hideAudioGateOverlay() {
 			if (audioGateOverlay) {
 				audioGateOverlay.style.display = "none";
+				audioGateOverlay.hidden = true;
+				audioGateOverlay.setAttribute("aria-hidden", "true");
+				if (audioGateOverlay.parentNode) {
+					audioGateOverlay.parentNode.removeChild(audioGateOverlay);
+				}
 			}
 		}
 
@@ -1633,82 +1639,87 @@ if (restartBtn) {
 
 // Ensure audio system is initialized on pages with audio (initialized later)
 
-// -- Start Menu: anime.js animations (entry, hover, click, title loop)
+// -- Start Menu: native animations (entry, hover, click, title loop)
 function initMenuWithAnime() {
-	if (!window.anime) {
-		console.warn('anime.js not found. Menu animations skipped.');
-		return;
-	}
-
 	var title = document.getElementById('mainTitle');
 	var btns = Array.prototype.slice.call(document.querySelectorAll('#btnGrid a'));
 	var arrow = document.querySelector('#scrollArrow img');
 
 	if (!title || btns.length === 0) return;
 
-	// Timeline: first title, then buttons (staggered)
-	var tl = anime.timeline({
-		autoplay: true,
-		easing: 'easeInOutQuad'
-	});
+	function playEntryAnimation(element, keyframes, options) {
+		if (element && typeof element.animate === 'function') {
+			element.animate(keyframes, options);
+		}
+	}
 
-	// Title entry: from below (translateY positive -> up), fade in
-	tl.add({
-		targets: title,
-		translateY: [60, 0],
-		opacity: [0, 1],
+	// Title entry: from below, fade in.
+	playEntryAnimation(title, [
+		{ transform: 'translateY(60px)', opacity: 0 },
+		{ transform: 'translateY(0)', opacity: 1 }
+	], {
 		duration: 700,
-		easing: 'easeInOutQuad'
-	})
-
-	// Buttons: staggered slide up + fade
-	.add({
-		targets: btns,
-		translateY: [40, 0],
-		opacity: [0, 1],
-		duration: 600,
-		delay: anime.stagger(120), // stagger
-		easing: 'easeInOutQuad'
-	}, '-=250')
-
-	// arrow appear
-	.add({ targets: arrow, translateY: [20,0], opacity: [0,1], duration: 500, easing: 'easeInOutQuad' }, '-=350');
-
-	// Title subtle pulse + tiny rotation loop
-	anime({
-		targets: title,
-		scale: [1, 1.03],
-		rotate: [-0.5, 0.5],
-		direction: 'alternate',
-		loop: true,
-		duration: 2400,
-		easing: 'easeInOutQuad',
-		delay: 1200
+		easing: 'ease-in-out',
+		fill: 'both'
 	});
+
+	// Buttons: staggered slide up + fade.
+	btns.forEach(function (btn, index) {
+		playEntryAnimation(btn, [
+			{ transform: 'translateY(40px)', opacity: 0 },
+			{ transform: 'translateY(0)', opacity: 1 }
+		], {
+			duration: 600,
+			delay: index * 120,
+			easing: 'ease-in-out',
+			fill: 'both'
+		});
+	});
+
+	// Arrow appear.
+	playEntryAnimation(arrow, [
+		{ transform: 'translateY(20px)', opacity: 0 },
+		{ transform: 'translateY(0)', opacity: 1 }
+	], {
+		duration: 500,
+		easing: 'ease-in-out',
+		fill: 'both'
+	});
+
+	// Title subtle pulse + tiny rotation loop.
+	if (title && typeof title.animate === 'function') {
+		title.animate([
+			{ transform: 'scale(1) rotate(-0.5deg)' },
+			{ transform: 'scale(1.03) rotate(0.5deg)' }
+		], {
+			duration: 2400,
+			direction: 'alternate',
+			iterations: Infinity,
+			easing: 'ease-in-out',
+			delay: 1200
+		});
+	}
 
 	// Button hover: scale up slightly (smooth easing)
 	btns.forEach(function (btn) {
 		btn.style.transformOrigin = 'center center';
+		btn.style.transition = 'transform 220ms ease';
 		btn.addEventListener('mouseenter', function () {
-			anime.remove(btn);
-			anime({ targets: btn, scale: 1.05, duration: 220, easing: 'easeOutQuad' });
+			btn.style.transform = 'scale(1.05)';
 		});
 		btn.addEventListener('mouseleave', function () {
-			anime.remove(btn);
-			anime({ targets: btn, scale: 1, duration: 260, easing: 'easeOutQuad' });
+			btn.style.transform = 'scale(1)';
 		});
 
 		// Click: short bounce using easeOutElastic
 		btn.addEventListener('mousedown', function (ev) {
-			anime.remove(btn);
-			anime({ targets: btn, scale: 0.92, duration: 120, easing: 'easeOutQuad' });
+			btn.style.transform = 'scale(0.92)';
 		});
 		btn.addEventListener('mouseup', function (ev) {
-			anime.remove(btn);
-			anime({ targets: btn, scale: 1.08, duration: 450, easing: 'easeOutElastic(1, .6)' });
-			// return to normal size after bounce
+			btn.style.transform = 'scale(1.08)';
+			// return to normal size after bounce.
 			setTimeout(function () {
-				anime({ targets: btn, scale: 1, duration: 320, easing: 'easeOutQuad' });
+				btn.style.transform = 'scale(1)';
 			}, 420);
 		});
 	});
@@ -1717,12 +1728,7 @@ function initMenuWithAnime() {
 // Initialize menu animations when on index (mainBox exists)
 if (document.getElementById('mainBox')) {
 	function ensureAnimeAndInit() {
-		if (window.anime) { initMenuWithAnime(); return; }
-		var s = document.createElement('script');
-		s.src = 'https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js';
-		s.onload = function () { initMenuWithAnime(); };
-		s.onerror = function () { console.warn('anime.js failed to load from CDN'); };
-		document.head.appendChild(s);
+		initMenuWithAnime();
 	}
 
 	if (document.readyState === 'loading') {
@@ -1734,7 +1740,6 @@ if (document.getElementById('mainBox')) {
 
 // Universal button animations for game pages
 function initGameButtonAnimations() {
-	if (!window.anime) return;
 	
 	var buttonSelectors = [
 		'.caseStartButton',
@@ -1752,55 +1757,27 @@ function initGameButtonAnimations() {
 		var buttons = document.querySelectorAll(selector);
 		buttons.forEach(function (btn) {
 			btn.style.transformOrigin = 'center center';
+			btn.style.transition = 'transform 220ms ease';
 			
 			// Hover: scale up
 			btn.addEventListener('mouseenter', function () {
-				anime.remove(btn);
-				anime({
-					targets: btn,
-					scale: 1.08,
-					duration: 280,
-					easing: 'easeOutQuad'
-				});
+				btn.style.transform = 'scale(1.08)';
 			});
 			
 			// Hover out: back to normal
 			btn.addEventListener('mouseleave', function () {
-				anime.remove(btn);
-				anime({
-					targets: btn,
-					scale: 1,
-					duration: 300,
-					easing: 'easeOutQuad'
-				});
+				btn.style.transform = 'scale(1)';
 			});
 			
 			// Click: bounce effect (easeOutElastic)
 			btn.addEventListener('mousedown', function () {
-				anime.remove(btn);
-				anime({
-					targets: btn,
-					scale: 0.88,
-					duration: 100,
-					easing: 'easeOutQuad'
-				});
+				btn.style.transform = 'scale(0.88)';
 			});
 			
 			btn.addEventListener('mouseup', function () {
-				anime.remove(btn);
-				anime({
-					targets: btn,
-					scale: 1.12,
-					duration: 400,
-					easing: 'easeOutElastic(1, .65)'
-				});
+				btn.style.transform = 'scale(1.12)';
 				setTimeout(function () {
-					anime({
-						targets: btn,
-						scale: 1,
-						duration: 300,
-						easing: 'easeOutQuad'
-					});
+					btn.style.transform = 'scale(1)';
 				}, 380);
 			});
 		});
@@ -1810,12 +1787,7 @@ function initGameButtonAnimations() {
 // Initialize game button animations on game pages
 if (document.getElementById('gameBody') || document.body.id === 'rulesCompactPage' || document.body.id === 'settingsPage') {
 	function ensureAnimeForGameButtons() {
-		if (window.anime) { initGameButtonAnimations(); return; }
-		var s = document.createElement('script');
-		s.src = 'https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js';
-		s.onload = function () { initGameButtonAnimations(); };
-		s.onerror = function () { console.warn('anime.js failed to load'); };
-		document.head.appendChild(s);
+		initGameButtonAnimations();
 	}
 	
 	if (document.readyState === 'loading') {
