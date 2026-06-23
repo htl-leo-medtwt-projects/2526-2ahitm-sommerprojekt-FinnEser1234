@@ -97,7 +97,6 @@ let cipherCurrentIndex = 0;
 let cipherSolved = false;
 let rooms = window.rooms || [];
 
-// Game state: stopwatch and case flow
 let timerSeconds = 0;
 let timerInterval = null;
 let finalAccuseMode = false;
@@ -346,7 +345,6 @@ function initAudioSystem() {
 	}
 
 	document.addEventListener("click", function (event) {
-		// If an element defines a specific sound via data-sound, play it.
 		let soundTarget = event.target.closest('[data-sound]');
 		if (soundTarget) {
 			let soundId = soundTarget.getAttribute('data-sound');
@@ -354,14 +352,11 @@ function initAudioSystem() {
 			return;
 		}
 
-		// If the element (or an ancestor) explicitly requests no sound, skip SFX.
-		// Use attribute `data-no-sound` or common hotspot classes to exclude.
 		let noSfxTarget = event.target.closest('[data-no-sound], .mapPieceBtn, .suspectPickBtn, #deskLetterBtn, .pinboardOverlay');
 		if (noSfxTarget) {
 			return;
 		}
 
-		// Fallback: play the default UI click for buttons/links/controls
 		let interactiveTarget = event.target.closest("button, a, input[type='range'], [role='button']");
 		if (interactiveTarget) {
 			playAudio("uiClickSfx");
@@ -453,7 +448,6 @@ function handleGameOver(won, message) {
 		updateBodyModalState();
 	}
 
-	// save only elapsed stopwatch time
 	try {
 		let runs = JSON.parse(localStorage.getItem('gameRuns') || '[]');
 		runs.push({
@@ -468,7 +462,6 @@ function checkAllLevelsCompleted() {
 	if (!Array.isArray(rooms) || rooms.length === 0) return false;
 	let allFound = rooms.every(function (r) { return !!r.found; });
 	if (allFound && roomZeroFullyExplored()) {
-		// prompt final accusation
 		finalAccuseMode = true;
 		openSuspectsModal();
 	}
@@ -653,14 +646,12 @@ function startFirstRoom() {
 	renderInventory();
 	renderRoomsGrid();
 
-	// persist progress (basic)
 	try {
 		localStorage.setItem('foundItems', JSON.stringify(foundItems));
 		localStorage.setItem('roomsState', JSON.stringify(rooms.map(function (r) { return { name: r.name, unlocked: !!r.unlocked, found: !!r.found }; })));
 	} catch (e) { }
 	updateBodyModalState();
 
-	// initialize game stopwatch
 	timerSeconds = 0;
 	updateHUD();
 	startTimer();
@@ -845,7 +836,6 @@ function showFinalReveal() {
 	finalRevealText.textContent = revealText;
 	if (finalRevealAccuseBtn) {
 		finalRevealAccuseBtn.textContent = accuseLabel;
-		// hide accuse button in specific final rooms (Blackwood and Voss)
 		if (currentRoomIndex === 2 || currentRoomIndex === 3) {
 			finalRevealAccuseBtn.style.display = 'none';
 		} else {
@@ -930,10 +920,10 @@ function solveCipherPuzzle() {
 		});
 	}
 
-	// reward solving the cipher
 	addScore(200);
 }
 
+// **Entschlüsselungsmaschine**
 function handleCipherLetterClick(button) {
 	if (!button || cipherSolved) {
 		return;
@@ -995,11 +985,9 @@ function chooseSuspect(suspectName) {
 	if (!suspectName) return;
 	selectedSuspect = suspectName;
 
-	// find suspect apartment indices
 	var blackIndex = rooms.findIndex(function (r) { return r.name && r.name.toLowerCase().includes('blackwood'); });
 	var vossIndex = rooms.findIndex(function (r) { return r.name && r.name.toLowerCase().includes('voss'); });
 
-	// If Blackwood chosen, ensure Voss locked; if Voss chosen, ensure Blackwood locked
 	if (suspectName.toLowerCase().includes('blackwood')) {
 		if (blackIndex !== -1) rooms[blackIndex].unlocked = true;
 		if (vossIndex !== -1) rooms[vossIndex].unlocked = false;
@@ -1117,10 +1105,8 @@ function addFoundItem(itemKey, title, sourceRoomIndex, shouldMarkRoomFound) {
 	});
 
 	playAudio("foundItemSfx");
-	// play backpacking sound for items that go into the inventory
 	playAudio("backpackSfx");
 
-	// reward points for finding a new item
 	addScore(100);
 
 	if (shouldMarkRoomFound !== false) {
@@ -1138,7 +1124,6 @@ function addFoundItem(itemKey, title, sourceRoomIndex, shouldMarkRoomFound) {
 	renderInventory();
 	renderRoomsGrid();
 
-	// check if all levels are completed -> allow final accusation
 	checkAllLevelsCompleted();
 }
 
@@ -1409,7 +1394,6 @@ mapPieceButtons.forEach(function (button, index) {
 				rooms[currentRoomIndex].found = true;
 			}
 			renderRoomsGrid();
-			// Only show map in Level 2 (Apartment), not in other rooms
 			if (currentRoomIndex === 1) {
 				showMap();
 			} else {
@@ -1523,7 +1507,6 @@ if (resetCipher) {
 if (mapVossBtn) {
 	mapVossBtn.addEventListener("click", function () {
 		closeMapText();
-		// Upper box: navigate to Voss' apartment
 		chooseSuspect("Mara Voss");
 		var vossIndex = rooms.findIndex(function (r) { return r.name && r.name.toLowerCase().includes('voss'); });
 		if (vossIndex === -1) {
@@ -1544,7 +1527,6 @@ if (mapVossBtn) {
 if (mapBlackwoodBtn) {
 	mapBlackwoodBtn.addEventListener("click", function () {
 		closeMapText();
-		// Lower box: navigate to Blackwood's apartment
 		chooseSuspect("Elias Blackwood");
 		var blackIndex = rooms.findIndex(function (r) { return r.name && r.name.toLowerCase().includes('blackwood'); });
 		if (blackIndex === -1) {
@@ -1562,7 +1544,6 @@ if (mapBlackwoodBtn) {
 	});
 }
 
-// Map trace button hover tooltips
 let mapTooltip = document.getElementById("mapTooltip");
 
 if (mapVossBtn && mapTooltip) {
@@ -1595,7 +1576,6 @@ if (mapBlackwoodBtn && mapTooltip) {
 
 renderCipherGrid();
 
-// HUD initial update
 updateHUD();
 initSettingsPage();
 if (document.readyState !== 'loading') {
@@ -1619,9 +1599,6 @@ function finalizeAccusation() {
 	}
 }
 
-// HUD accuse button removed: feature disabled per design
-
-// Finalize accusation button in suspects modal
 let finalizeAccuseBtnEl = document.getElementById('finalizeAccuseBtn');
 if (finalizeAccuseBtnEl) {
 	finalizeAccuseBtnEl.addEventListener('click', function () {
@@ -1629,7 +1606,6 @@ if (finalizeAccuseBtnEl) {
 	});
 }
 
-// Restart button handler
 let restartBtn = document.getElementById('restartBtn');
 if (restartBtn) {
 	restartBtn.addEventListener('click', function () {
@@ -1637,9 +1613,6 @@ if (restartBtn) {
 	});
 }
 
-// Ensure audio system is initialized on pages with audio (initialized later)
-
-// -- Start Menu: native animations (entry, hover, click, title loop)
 function initMenuWithAnime() {
 	var title = document.getElementById('mainTitle');
 	var btns = Array.prototype.slice.call(document.querySelectorAll('#btnGrid a'));
@@ -1653,7 +1626,6 @@ function initMenuWithAnime() {
 		}
 	}
 
-	// Title entry: from below, fade in.
 	playEntryAnimation(title, [
 		{ transform: 'translateY(60px)', opacity: 0 },
 		{ transform: 'translateY(0)', opacity: 1 }
@@ -1663,7 +1635,6 @@ function initMenuWithAnime() {
 		fill: 'both'
 	});
 
-	// Buttons: staggered slide up + fade.
 	btns.forEach(function (btn, index) {
 		playEntryAnimation(btn, [
 			{ transform: 'translateY(40px)', opacity: 0 },
@@ -1676,7 +1647,6 @@ function initMenuWithAnime() {
 		});
 	});
 
-	// Arrow appear.
 	playEntryAnimation(arrow, [
 		{ transform: 'translateY(20px)', opacity: 0 },
 		{ transform: 'translateY(0)', opacity: 1 }
@@ -1686,7 +1656,6 @@ function initMenuWithAnime() {
 		fill: 'both'
 	});
 
-	// Title subtle pulse + tiny rotation loop.
 	if (title && typeof title.animate === 'function') {
 		title.animate([
 			{ transform: 'scale(1) rotate(-0.5deg)' },
@@ -1700,7 +1669,6 @@ function initMenuWithAnime() {
 		});
 	}
 
-	// Button hover: scale up slightly (smooth easing)
 	btns.forEach(function (btn) {
 		btn.style.transformOrigin = 'center center';
 		btn.style.transition = 'transform 220ms ease';
@@ -1711,13 +1679,11 @@ function initMenuWithAnime() {
 			btn.style.transform = 'scale(1)';
 		});
 
-		// Click: short bounce using easeOutElastic
 		btn.addEventListener('mousedown', function (ev) {
 			btn.style.transform = 'scale(0.92)';
 		});
 		btn.addEventListener('mouseup', function (ev) {
 			btn.style.transform = 'scale(1.08)';
-			// return to normal size after bounce.
 			setTimeout(function () {
 				btn.style.transform = 'scale(1)';
 			}, 420);
@@ -1725,7 +1691,6 @@ function initMenuWithAnime() {
 	});
 }
 
-// Initialize menu animations when on index (mainBox exists)
 if (document.getElementById('mainBox')) {
 	function ensureAnimeAndInit() {
 		initMenuWithAnime();
@@ -1738,7 +1703,6 @@ if (document.getElementById('mainBox')) {
 	}
 }
 
-// Universal button animations for game pages
 function initGameButtonAnimations() {
 	
 	var buttonSelectors = [
@@ -1759,17 +1723,12 @@ function initGameButtonAnimations() {
 			btn.style.transformOrigin = 'center center';
 			btn.style.transition = 'transform 220ms ease';
 			
-			// Hover: scale up
 			btn.addEventListener('mouseenter', function () {
 				btn.style.transform = 'scale(1.08)';
 			});
-			
-			// Hover out: back to normal
 			btn.addEventListener('mouseleave', function () {
 				btn.style.transform = 'scale(1)';
 			});
-			
-			// Click: bounce effect (easeOutElastic)
 			btn.addEventListener('mousedown', function () {
 				btn.style.transform = 'scale(0.88)';
 			});
@@ -1783,8 +1742,6 @@ function initGameButtonAnimations() {
 		});
 	});
 }
-
-// Initialize game button animations on game pages
 if (document.getElementById('gameBody') || document.body.id === 'rulesCompactPage' || document.body.id === 'settingsPage') {
 	function ensureAnimeForGameButtons() {
 		initGameButtonAnimations();
